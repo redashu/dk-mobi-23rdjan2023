@@ -252,6 +252,131 @@ Server:
   GitCommit:        de40ad0
 ```
 
+### importance of docker /container images 
+
+<img src="images.png">
+
+## Docker client opertaions 
+
+### searching images on docker hub 
+
+```
+[ashu@docker-host ~]$ docker  search   mysql
+NAME                            DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+mysql                           MySQL is a widely used, open-source relation…   13718     [OK]       
+mariadb                         MariaDB Server is a high performing open sou…   5235      [OK]       
+phpmyadmin                      phpMyAdmin - A web interface for MySQL and M…   725       [OK]       
+percona                         Percona Server is a fork of the MySQL relati…   599       [OK]       
+databack/mysql-backup           Back up mysql databases to... anywhere!         80                   
+bitnami/mysql                   Bitnami MySQL Docker Image                      80                   [OK]
+linuxserver/mysql-workbench                                                     48                   
+ubuntu/mysql                    MySQL open source fast, stable, multi-thread…   41                   
+linuxserver/mysql               A Mysql container, brought to you by LinuxSe…   38                   
+circleci/mysql                  MySQL is a widely used, open-source relation…   28                   
+google/mysql                    MySQL server for Google Compute Engine          22                   [OK]
+rapidfort/mysql                 RapidFort optimized, hardened image for MySQL   14                   
+bitnami/mysqld-exporter                                                         4                    
+ibmcom/mysql-s390x              Docker image for mysql-s390x                    2                    
+vitess/mysqlctld                vitess/mysqlctld                                1                    [OK]
+newrelic/mysql-plugin           New Relic Plugin for monitoring MySQL databa…   1                    [OK]
+```
+
+### search by tag
+
+
+```
+ 19  docker  search   mysql
+   20  docker  search   mysql:5.7 
+   21  docker  search nginx:1.11
+
+```
+
+### lets pull image from docker hub 
+
+```
+[ashu@docker-host ~]$ docker pull mysql
+Using default tag: latest
+latest: Pulling from library/mysql
+2c57acc5afca: Pull complete 
+0a990ab965c1: Pull complete 
+7acb6a84f0f1: Pull complete 
+6a2351a691a4: Pull complete 
+cdd0aae0ac1a: Pull complete 
+0c024d6bf869: Pull complete 
+e536ea8ecf65: Pull complete 
+d24661dff86b: Pull complete 
+95ef82dfce7a: Pull complete 
+c9a31e1bffa1: Pull complete 
+4edb4789da39: Pull complete 
+Digest: sha256:6f54880f928070a036aa3874d4a3fa203adc28688eb89e9f926a0dcacbce3378
+Status: Downloaded newer image for mysql:latest
+docker.io/library/mysql:latest
+[ashu@docker-host ~]$ 
+[ashu@docker-host ~]$ docker  images
+REPOSITORY   TAG       IMAGE ID       CREATED      SIZE
+mysql        latest    b939d379d46e   5 days ago   514MB
+[ashu@docker-host ~]$ 
+
+
+```
+
+### docker pull concept 
+
+<img src="pull.png">
+
+### creating container from image
+
+<img src="life.png">
+
+### creating first container 
+
+<img src="cc.png">
+
+### perform 
+
+```
+[ashu@docker-host ~]$ docker run --name ashuc1 -d    oraclelinux:8.3  sleep 1000 
+960c81d1104fc3506ca946837e4bc721129bf18dcce6f2e5d69e655c15d47833
+[ashu@docker-host ~]$ docker  ps
+CONTAINER ID   IMAGE             COMMAND         CREATED              STATUS              PORTS     NAMES
+960c81d1104f   oraclelinux:8.3   "sleep 1000"    7 seconds ago        Up 6 seconds                  ashuc1
+9790c2f72363   oraclelinux:8.5   "sleep 10000"   About a minute ago   Up About a minute             nmgrilo_oracle
+```
+
+### listing all the containers 
+
+```
+[ashu@docker-host ~]$ docker  ps -a
+CONTAINER ID   IMAGE             COMMAND                  CREATED              STATUS                          PORTS                 NAMES
+d63d66c4f06b   oraclelinux:8.5   "sleep 10"               25 seconds ago       Exited (0) 14 seconds ago                             acsilva
+ffaf720df119   mysql             "docker-entrypoint.s…"   About a minute ago   Up About a minute               3306/tcp, 33060/tcp   mysqlContainer
+9be58ac8b4f4   mysql:5.6         "docker-entrypoint.s…"   2 minutes ago        Up 2 minutes                    3306/tcp              dphenriques1
+99fb8726598c   oraclelinux:8.3   "sleep 1000"             2 minutes ago        Up 2 minutes              
+```
+
+### stopping a running container 
+
+```
+ docker  stop   ashuc1
+```
+
+### starting the existing container 
+
+```
+[ashu@docker-host ~]$ docker  start  ashuc1
+ashuc1
+[ashu@docker-host ~]$ docker ps
+CONTAINER ID   IMAGE             COMMAND         CREATED          STATUS          PORTS     NAMES
+d71323aa18a7   oraclelinux:8.3   "sleep 1000"    35 seconds ago   Up 34 seconds             dvvladimirov
+0b99bf66bce9   oraclelinux:8.3   "sleep 1000"    2 minutes ago    Up 2 minutes              dgneto1
+2231e343a5af   oraclelinux:8.3   "sleep 10000"   4 minutes ago    Up 4 minutes              jpconceicaoc1
+df673bb65207   oraclelinux:8.3   "sleep 1000"    5 minutes ago    Up 5 minutes              jjisidoro1
+960c81d1104f   oraclelinux:8.3   "sleep 1000"    6 minutes ago    Up 2 seconds              ashuc1
+[ashu@docker-host ~]$ 
+
+```
+
+
 
 
 
