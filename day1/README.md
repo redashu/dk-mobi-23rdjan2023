@@ -376,6 +376,14 @@ df673bb65207   oraclelinux:8.3   "sleep 1000"    5 minutes ago    Up 5 minutes  
 
 ```
 
+### checking the resouces consumption of the containers 
+
+```
+ 64  docker  stats 
+   65  docker  stats  ashuc1
+```
+
+
 
 
 
