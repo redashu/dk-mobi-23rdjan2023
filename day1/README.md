@@ -383,6 +383,42 @@ df673bb65207   oraclelinux:8.3   "sleep 1000"    5 minutes ago    Up 5 minutes  
    65  docker  stats  ashuc1
 ```
 
+### how to get shell of running container 
+
+```
+[ashu@docker-host ~]$ docker  exec  -it  ashuc1  bash 
+[root@960c81d1104f /]# 
+[root@960c81d1104f /]# whoami
+root
+[root@960c81d1104f /]# ls  /
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@960c81d1104f /]# cd  /mnt/
+[root@960c81d1104f mnt]# ls
+[root@960c81d1104f mnt]# mkdir hello ashu 
+[root@960c81d1104f mnt]# ls
+ashu  hello
+[root@960c81d1104f mnt]# echo hii there >hii.txt 
+[root@960c81d1104f mnt]# ls
+ashu  hello  hii.txt
+[root@960c81d1104f mnt]# cat hii.txt 
+hii there
+[root@960c81d1104f mnt]# 
+[root@960c81d1104f mnt]# exit
+exit
+
+```
+
+### terminate / delete container forever 
+
+```
+[ashu@docker-host ~]$ docker  stop  dphenriques3
+dphenriques3
+[ashu@docker-host ~]$ docker  rm  dphenriques3
+dphenriques3
+
+```
+
+
 
 
 
