@@ -42,6 +42,14 @@ helloc1.txt
 [ashu@docker-host ~]$ 
 ```
 
+### app containerization process 
+
+<img src="appb.png">
+
+### container image building tools 
+
+<img src="imgb.png">
+
 
 
 
