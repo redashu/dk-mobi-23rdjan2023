@@ -186,6 +186,17 @@ exit
 [ashu@docker-h
 ```
 
+### Docker image remove 
+
+```
+[ashu@docker-host ashu-apps]$ docker rmi  oraclelinux:8.3 
+Untagged: oraclelinux:8.3
+Untagged: oraclelinux@sha256:af3182ee6c1e56f18fc1fecaf638da57d7c47233862e5c32f5ad723a6ab4c6db
+Deleted: sha256:816d99f0bbe8c6cca3d2935865e23e754483d2cface2476d21376a7c656d920f
+Deleted: sha256:02a3a073ed48ad477de9652df4ed376b03123bebf96ae55933a49aa098eb6dbe
+```
+
+
 
 
 
