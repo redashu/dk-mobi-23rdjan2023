@@ -279,6 +279,16 @@ OpenJDK 64-Bit Server VM (Red_Hat-11.0.18.0.10-2.el8_7) (build 11.0.18+10-LTS, m
 exit
 ```
 
+### kill & remove 
+
+```
+[ashu@docker-host javaapp]$ docker kill  ashujjcc1 
+ashujjcc1
+[ashu@docker-host javaapp]$ docker rm ashujjcc1 
+ashujjcc1
+```
+
+
 
 
 
