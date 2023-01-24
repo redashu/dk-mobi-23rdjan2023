@@ -196,6 +196,89 @@ Deleted: sha256:816d99f0bbe8c6cca3d2935865e23e754483d2cface2476d21376a7c656d920f
 Deleted: sha256:02a3a073ed48ad477de9652df4ed376b03123bebf96ae55933a49aa098eb6dbe
 ```
 
+### custom jdk 11 image 
+
+```
+FROM oraclelinux:8.4  
+# FROM is automatically will pull image from docker hub 
+LABEL name=ashutoshh
+LABEL email=ashutoshh@linux.com 
+# Label is an optional field but you can use to share image developer info 
+RUN yum install java-11-openjdk.x86_64 java-11-openjdk-devel.x86_64 -y 
+RUN mkdir /ashucode 
+# RUn will be executing any shell command to image during build time 
+COPY ashu.java /ashucode/
+# copy data from docker client to docker server during image build time 
+WORKDIR /ashucode
+# change directory of this image during build time 
+RUN javac ashu.java 
+# compiling java code to create class file 
+CMD  ["java","ashu"]
+# this will be automatically executed whenever someone create container 
+# from this image 
+# CMD is used to define the default process of container 
+```
+
+### lets build it 
+
+```
+[ashu@docker-host ashu-apps]$ ls
+javaapp  webapps
+[ashu@docker-host ashu-apps]$ cd  javaapp/
+[ashu@docker-host javaapp]$ ls
+ashu.java  Dockerfile  jdk11.dockerfile
+[ashu@docker-host javaapp]$ docker build -t ashujavacode:jdk11  -f jdk11.dockerfile  . 
+
+ashu@docker-host javaapp]$ docker build -t ashujavacode:jdk11  -f jdk11.dockerfile  . 
+Sending build context to Docker daemon   5.12kB
+Step 1/9 : FROM oraclelinux:8.4
+ ---> 97e22ab49eea
+Step 2/9 : LABEL name=ashutoshh
+ ---> Running in 66fe78b69b67
+Removing intermediate container 66fe78b69b67
+ ---> 6a8782dfacb3
+Step 3/9 : LABEL email=ashutoshh@linux.com
+ ---> Running in 58a1364f4966
+Removing intermediate container 58a1364f4966
+ ---> ef479d4355c8
+Step 4/9 : RUN yum install java-11-openjdk.x86_64 java-11-openjdk-devel.x86_64 -y
+ ---> Running in ed90a61c2c39
+Oracle Linux 8 BaseOS Latest (x86_64)            80 MB/s |  54 MB     00:00    
+
+
+```
+
+### creating container
+
+```
+[ashu@docker-host javaapp]$ 
+[ashu@docker-host javaapp]$ docker  images  |  grep ashu
+ashujavacode          jdk11     a56b94ae2d13   10 seconds ago           680MB
+ashujavacode          1.0       66d28ca36571   48 minutes ago           467MB
+[ashu@docker-host javaapp]$ 
+[ashu@docker-host javaapp]$ 
+[ashu@docker-host javaapp]$ docker run -itd --name ashujjcc1  ashujavacode:jdk11 
+4f5898df3020be0cc02f34321e0a88e101da73c678372be4179c0c29ec4e2535
+[ashu@docker-host javaapp]$ docker ps
+CONTAINER ID   IMAGE                COMMAND                  CREATED          STATUS          PORTS     NAMES
+4f5898df3020   ashujavacode:jdk11   "java ashu"              2 seconds ago    Up 1 second               ashujjcc1
+```
+
+### verify version 
+
+```
+[ashu@docker-host javaapp]$ docker exec -it ashujjcc1 bash 
+[root@4f5898df3020 ashucode]# 
+[root@4f5898df3020 ashucode]# 
+[root@4f5898df3020 ashucode]# java -version 
+openjdk version "11.0.18" 2023-01-17 LTS
+OpenJDK Runtime Environment (Red_Hat-11.0.18.0.10-2.el8_7) (build 11.0.18+10-LTS)
+OpenJDK 64-Bit Server VM (Red_Hat-11.0.18.0.10-2.el8_7) (build 11.0.18+10-LTS, mixed mode, sharing)
+[root@4f5898df3020 ashucode]# 
+[root@4f5898df3020 ashucode]# exit
+exit
+```
+
 
 
 
