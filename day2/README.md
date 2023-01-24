@@ -288,6 +288,56 @@ ashujjcc1
 ashujjcc1
 ```
 
+## Importance of Registry 
+
+<img src="reg.png">
+
+### Understanding image name format 
+
+<img src="name.png">
+
+### pushing image to docker hub 
+
+```
+[ashu@docker-host javaapp]$ docker  images  |   grep ashu
+ashujavacode           jdk11     a56b94ae2d13   30 minutes ago      680MB
+ashujavacode           1.0       66d28ca36571   About an hour ago   467MB
+[ashu@docker-host javaapp]$ 
+[ashu@docker-host javaapp]$ docker  tag  ashujavacode:1.0    docker.io/dockerashu/ashujava:jdk18v1  
+[ashu@docker-host javaapp]$ 
+[ashu@docker-host javaapp]$ docker  images  |   grep ashu
+ashujavacode                        jdk11     a56b94ae2d13   32 minutes ago       680MB
+dockerashu/ashujava                 jdk18v1   66d28ca36571   About an hour ago    467MB
+ashujavacode                        1.0       66d28ca36571   About an hour ago    467MB
+[ashu@docker-host javaapp]$ docker login 
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ashu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ashu@docker-host javaapp]$ docker  push docker.io/dockerashu/ashujava:jdk18v1 
+The push refers to repository [docker.io/dockerashu/ashujava]
+0a49092c3bb8: Pushed 
+9bcbf366e390: Pushed 
+8af1a824cac3: Pushed 
+817d0ae8823b: Mounted from library/openjdk 
+0c37caf65974: Mounted from library/openjdk 
+e3235af76f17: Mounted from library/openjdk 
+jdk18v1: digest: sha256:361f4a7ceb7288fd25c01b982081087c787e59c5549af7df9b6be472fa2d9760 size: 1575
+[ashu@docker-host javaapp]$ 
+```
+
+### optinal step 
+
+```
+[ashu@docker-host javaapp]$ docker logout 
+Removing login credentials for https://index.docker.io/v1/
+```
+
+
 
 
 
