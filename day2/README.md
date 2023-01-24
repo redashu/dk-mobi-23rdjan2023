@@ -142,6 +142,51 @@ Successfully built 66d28ca36571
 Successfully tagged ashujavacode:1.0
 ```
 
+### creating containers from this image 
+
+```
+[ashu@docker-host ashu-apps]$ docker  images  |  grep ashu
+ashujavacode           1.0       66d28ca36571   15 minutes ago   467MB
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ docker run --name ashujc1  -itd ashujavacode:1.0 
+a6992bbea7853566a8a3fa880815f7f12e6d6dd5137fd3cfa3a84830ed115645
+[ashu@docker-host ashu-apps]$ docker ps
+CONTAINER ID   IMAGE                      COMMAND               CREATED         STATUS                  PORTS     NAMES
+25dbc2cbc145   jmisilvajavacode:1.0       "java jmisilva"       1 second ago    Up Less than a second             jmisilvac1
+43a3f3409f97   dvvladimirovjavacode:1.0   "java dvvladimirov"   2 seconds ago   Up Less than a second             dvvladimirovjc1
+07a183fd2967   lzmartincode:1.0           "java lzmartin"       2 seconds ago   Up Less than a second             lzmartinc1
+fc3e4cb2fcda   jpconceicaocode:1.0        "java jpconceicao"    2 seconds ago   Up Less than a second             jpconceicaojc1
+e3a30d7a7d63   scunhajavacode:1.0         "java scunha"         3 seconds ago   Up 1 second                       scunhajc1
+a6992bbea785   ashujavacode:1.0           "java ashu"           4 seconds ago   Up 2 seconds                      ashujc1
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### to check output 
+
+```
+139  docker logs  ashujc1 
+  140  docker logs  -f ashujc1 
+```
+
+### verify jdk version 
+
+```
+ashu@docker-host ashu-apps]$ docker  exec -ti ashujc1  bash 
+bash-4.4# 
+bash-4.4# java -version 
+openjdk version "18.0.2.1" 2022-08-18
+OpenJDK Runtime Environment (build 18.0.2.1+1-1)
+OpenJDK 64-Bit Server VM (build 18.0.2.1+1-1, mixed mode, sharing)
+bash-4.4# cd  /ashucode/
+bash-4.4# ls
+ashu.class  ashu.java
+bash-4.4# exit
+exit
+[ashu@docker-h
+```
+
+
 
 
 
