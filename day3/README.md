@@ -359,6 +359,52 @@ round-trip min/avg/max = 0.075/0.109/0.144 ms
 [ashu@docker-host ashu-apps]$ 
 ```
 
+### NAT in container to use host iP 
+
+```
+[ashu@docker-host ashu-apps]$ docker  exec -it ashuc1  sh 
+/ # 
+/ # ping google.com 
+PING google.com (172.253.63.113): 56 data bytes
+64 bytes from 172.253.63.113: seq=0 ttl=95 time=1.741 ms
+64 bytes from 172.253.63.113: seq=1 ttl=95 time=1.776 ms
+64 bytes from 172.253.63.113: seq=2 ttl=95 time=1.782 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.741/1.766/1.782 ms
+/ # 
+/ # apk add python3
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.17/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.17/community/x86_64/APKINDEX.tar.gz
+(1/13) Installing libbz2 (1.0.8-r4)
+(2/13) Installing libexpat (2.5.0-r0)
+(3/13) Installing libffi (3.4.4-r0)
+(4/13) Installing gdbm (1.23-r0)
+(5/13) Installing xz-libs (5.2.9-r0)
+(6/13) Installing libgcc (12.2.1_git20220924-r4)
+(7/13) Installing libstdc++ (12.2.1_git20220924-r4)
+(8/13) Installing mpdecimal (2.5.1-r1)
+(9/13) Installing ncurses-terminfo-base (6.3_p20221119-r0)
+(10/13) Installing ncurses-libs (6.3_p20221119-r0)
+(11/13) Installing readline (8.2.0-r0)
+(12/13) Installing sqlite-libs (3.40.1-r0)
+(13/13) Installing python3 (3.10.9-r1)
+Executing busybox-1.35.0-r29.trigger
+OK: 60 MiB in 28 packages
+/ # python3
+Python 3.10.9 (main, Dec 12 2022, 17:52:15) [GCC 12.2.1 20220924] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+/ # 
+```
+
+
+### Understanding port mapping 
+
+<img src="portm.png">
+
+
 
 
 
