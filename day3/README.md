@@ -462,6 +462,47 @@ round-trip min/avg/max = 0.088/0.093/0.100 ms
 / # 
 ```
 
+### Jenkins Dockerfile 
+
+```
+FROM oraclelinux:8.4
+LABEL name="ashutoshh"
+LABEL email="ashutoshh@linux.com"
+RUN yum install java-11-openjdk.x86_64 java-11-openjdk-devel.x86_64 wget -y && mkdir /app
+WORKDIR /app
+RUN wget https://get.jenkins.io/war-stable/2.375.2/jenkins.war
+# downloading jenkins war file 
+EXPOSE 8080 
+# by default letting docker engine know about port 
+CMD ["java","-jar","jenkins.war"]
+```
+
+### lets build it 
+
+```
+ashu@docker-host ashu-apps]$ cd tools/
+[ashu@docker-host tools]$ ls
+jenkins.dockerfile
+[ashu@docker-host tools]$ docker build -t ashucicd:jenkinsv1  -f jenkins.dockerfile  . 
+Sending build context to Docker daemon  2.048kB
+Step 1/8 : FROM oraclelinux:8.4
+ ---> 97e22ab49eea
+Step 2/8 : LABEL name="ashutoshh"
+ ---> Running in 45165e41660e
+Removing intermediate container 45165e41660e
+ ---> fad96563ddd2
+Step 3/8 : LABEL email="ashutoshh@linux.com"
+ ---> Running in 15fe64746aa5
+Removing intermediate container 15fe64746aa5
+ ---> a98862ce49ef
+Step 4/8 : RUN yum install java-11-openjdk.x86_64 java-11-openjdk-devel.x86_64 wget -y && mkdir /app
+ ---> Running in 6ebc6f64cab3
+Oracle Linux 8 BaseOS Latest (x86_64)            56 MB/s |  54 MB     00:00    
+
+
+```
+
+
 
 
 
