@@ -92,6 +92,16 @@ REPOSITORY   TAG        IMAGE ID       CREATED          SIZE
 ashunginx    webappv1   a8b5aa15a99d   12 seconds ago   144MB
 nginx        latest     a99a39d070bf   2 weeks ago      142MB
 ```
+### launching a container 
+
+```
+[ashu@docker-host ashu-apps]$ docker  run -itd  --name ashuwebappc1  -p  1234:80 ashunginx:webappv1  
+db95870cb71b59c515c6894e84fbb27f231f848aa783018f203d4b70891a4fbd
+[ashu@docker-host ashu-apps]$ docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED         STATUS         PORTS                                   NAMES
+db95870cb71b   ashunginx:webappv1     "/docker-entrypoint.…"   3 seconds ago   Up 2 seconds   0.0.0.0:1234->80/tcp, :::1234->80/tcp   ashuwebappc1
+```
+
 
 
 
