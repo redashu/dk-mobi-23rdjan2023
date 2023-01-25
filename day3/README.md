@@ -404,6 +404,64 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 <img src="portm.png">
 
+### container with No networking 
+
+```
+[ashu@docker-host ashu-apps]$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+6539a1fa754f   bridge    bridge    local
+d9da15ff98a1   host      host      local
+51ef9621f061   none      null      local
+[ashu@docker-host ashu-apps]$ docker run -it --rm --network none alpine 
+/ # 
+/ # 
+/ # ifconfig 
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ping google.com 
+ping: bad address 'google.com'
+/ # exit
+[ashu@docker-host ashu-apps]$ 
+```
+
+### custom bridge in container 
+
+```
+ 284  docker  network  create  ashubr1 
+  285  docker  network ls
+  286  docker  network inspect  ashubr1
+  287  history 
+  288  docker  network  create  ashubr2  --subnet  192.168.1.0/24  --gateway 192.168.1.1 
+  289  docker  network inspect  ashubr2
+  290  history 
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ docker  run --itd --name ashuc1  --netowrk ashubr1  alpine 
+unknown flag: --itd
+See 'docker run --help'.
+[ashu@docker-host ashu-apps]$ docker  run -itd --name ashuc1  --network  ashubr1  alpine
+9f1f84739298a70c24aed515703504a498f305a19fe4d3b1099074ed593b4e9c
+[ashu@docker-host ashu-apps]$ docker  run -itd --name ashuc2  --network  ashubr1  alpine
+c680f69e77ae0dbcaf07a65d315e80edd99d1c01394f2a8709f930b2c828303d
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ docker  exec -it ashuc1 sh 
+/ # ping  ashuc2
+PING ashuc2 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.091 ms
+64 bytes from 172.18.0.3: seq=1 ttl=64 time=0.088 ms
+64 bytes from 172.18.0.3: seq=2 ttl=64 time=0.100 ms
+^C
+--- ashuc2 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.088/0.093/0.100 ms
+/ # 
+```
+
 
 
 
