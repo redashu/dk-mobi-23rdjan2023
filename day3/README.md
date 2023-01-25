@@ -102,6 +102,50 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED         S
 db95870cb71b   ashunginx:webappv1     "/docker-entrypoint.…"   3 seconds ago   Up 2 seconds   0.0.0.0:1234->80/tcp, :::1234->80/tcp   ashuwebappc1
 ```
 
+### COntainer restart policy 
+
+<img src="restart.png">
+
+### list of restart policy in docker 
+
+<img src="res.png">
+
+### printing restart policy of any running or  non running container 
+
+```
+[ashu@docker-host ashu-apps]$ docker  inspect  ashuwebappc1  --format='{{.Id}}'
+db95870cb71b59c515c6894e84fbb27f231f848aa783018f203d4b70891a4fbd
+[ashu@docker-host ashu-apps]$ docker  inspect  ashuwebappc1  --format='{{.State.Status}}'
+exited
+[ashu@docker-host ashu-apps]$ docker  inspect  ashuwebappc1  --format='{{.HostConfig.RestartPolicy.Name}}'
+no
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### changing restart policy of an existing container 
+
+```
+[ashu@docker-host ashu-apps]$ docker update  ashuwebappc1  --restart  always 
+ashuwebappc1
+[ashu@docker-host ashu-apps]$ docker  inspect  ashuwebappc1  --format='{{.HostConfig.RestartPolicy.Name}}'
+always
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### assigning restart policy during container creation time 
+
+```
+[ashu@docker-host ashu-apps]$  docker  run -itd  --name ashuwebappc1  -p  1234:80   --restart unless-stopped        ashunginx:webappv1
+1a8cefefd026e73d311ea0630ef688bbe8efb605b7533d8cdc551d1e941b9fba
+[ashu@docker-host ashu-apps]$ docker  inspect  ashuwebappc1  --format='{{.HostConfig.RestartPolicy.Name}}'
+unless-stopped
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+
 
 
 
