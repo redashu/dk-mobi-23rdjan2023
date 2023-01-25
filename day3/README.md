@@ -146,6 +146,38 @@ unless-stopped
 ```
 
 
+## Control groups to limit resources to the containers 
+
+<img src="cg.png">
+
+### more info 
+
+<img src="cg1.png">
+
+### limiting RAM 
+
+```
+[ashu@docker-host ashu-apps]$ docker run -itd --name ashuwebc1  --restart always  --memory 200M  -p 1234:80  ashunginx:webappv1
+bfe98f7463ebff80629db7759be92908f7a52dcd0d5f04a7b3ab8129d04e94b4
+[ashu@docker-host ashu-apps]$ docker  ps
+CONTAINER ID   IMAGE                      COMMAND                  CREATED          STATUS                  PORTS                                   NAMES
+2e9a2440aafa   nhenriquesnginx:webappv1   "/docker-entrypoint.…"   1 second ago     Up Less than a second   0.0.0.0:4353->80/tcp, :::4353->80/tcp   nhenriqueswebappc1
+bfe98f7463eb   ashunginx:webappv1         "/docker-entrypoint.…"   3 seconds ago    Up 2 seconds            0.0.0.0:1234->80/tcp, :::1234->80/tcp   ashuwebc1
+d74c74931664   jjunior:webappv1           "/docker-entrypoint.…"   19 seconds ago   Up 18 seconds           80/tcp                                  jjuniorc1
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### CPu Understanding for containers 
+
+<img src="cpu.png">
+
+### cpu allocation 
+
+```
+docker run -itd --name ashuwebc1  --restart always  --memory 200M  -p 1234:80  --cpuset-cpus=1 --cpu-shares=325    ashunginx:webappv1
+```
+
 
 
 
