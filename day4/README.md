@@ -65,4 +65,28 @@ ashu-ui-c1          ashunginx:webappv1   "/docker-entrypoint.…"   ashu-ui     
 
 ```
 
+### more compose commands 
+
+```
+ashu@docker-host ashu-compose-examples]$ docker-compose  ps
+NAME                IMAGE                COMMAND                  SERVICE             CREATED             STATUS              PORTS
+ashu-ui-c1          ashunginx:webappv1   "/docker-entrypoint.…"   ashu-ui             8 minutes ago       Up 8 minutes        0.0.0.0:1234->80/tcp, :::1234->80/tcp
+[ashu@docker-host ashu-compose-examples]$ docker-compose  images
+CONTAINER           REPOSITORY          TAG                 IMAGE ID            SIZE
+ashu-ui-c1          ashunginx           webappv1            a8b5aa15a99d        144MB
+[ashu@docker-host ashu-compose-examples]$ docker-compose  stop 
+[+] Running 1/1
+ ⠿ Container ashu-ui-c1  Stopped                                                                                                                                 0.2s
+[ashu@docker-host ashu-compose-examples]$ docker-compose  ps
+NAME                IMAGE               COMMAND             SERVICE             CREATED             STATUS              PORTS
+[ashu@docker-host ashu-compose-examples]$ docker-compose  ps -a
+NAME                IMAGE                COMMAND                  SERVICE             CREATED             STATUS                      PORTS
+ashu-ui-c1          ashunginx:webappv1   "/docker-entrypoint.…"   ashu-ui             8 minutes ago       Exited (0) 11 seconds ago   
+[ashu@docker-host ashu-compose-examples]$ docker-compose  start
+[+] Running 1/1
+ ⠿ Container ashu-ui-c1  Started                              
+```
+
+
+
 
