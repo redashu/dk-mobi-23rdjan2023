@@ -288,6 +288,72 @@ MYSQL_PASSWORD=AshuDb@098
 
 <img src="st5.png">
 
+### creating volume 
+
+```
+[ashu@docker-host ashu-compose-examples]$ docker volume  ls
+DRIVER    VOLUME NAME
+[ashu@docker-host ashu-compose-examples]$ docker volume  create ashu-vol1 
+ashu-vol1
+[ashu@docker-host ashu-compose-examples]$ docker volume  ls
+DRIVER    VOLUME NAME
+local     ashu-vol1
+[ashu@docker-host ashu-compose-examples]$ docker volume  inspect  ashu-vol1 
+[
+    {
+        "CreatedAt": "2023-01-26T12:42:39Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/ashu-vol1/_data",
+        "Name": "ashu-vol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+```
+
+### using volume with more than one containers
+
+```
+[ashu@docker-host ashu-compose-examples]$ docker run -itd --name ashuc1 -v ashu-vol1:/mnt/data:rw  alpine 
+904f56c8d34fa13bcb648a0617eb626be7d4dfa2bff7b2e3d6bf5419d4384eed
+[ashu@docker-host ashu-compose-examples]$ 
+[ashu@docker-host ashu-compose-examples]$ 
+[ashu@docker-host ashu-compose-examples]$ docker run -itd --name ashuc2 -v ashu-vol1:/opt/new:ro  alpine 
+a86b2d81b34d000ad67a4bfcb6aa0c78ccec65a92099722380a78d2a14fc8a25
+[ashu@docker-host ashu-compose-examples]$ 
+[ashu@docker-host ashu-compose-examples]$ docker  exec -it ashuc1 sh 
+/ # cd /mnt/data/
+/mnt/data # ls
+/mnt/data # mkdir hello world
+/mnt/data # touch a.txt b.txt
+/mnt/data # ls
+a.txt  b.txt  hello  world
+/mnt/data # eit
+[ashu@docker-host ashu-compose-examples]$ 
+[ashu@docker-host ashu-compose-examples]$ docker  exec -it ashuc2 sh 
+/ # cd /opt/new/
+/opt/new # ls
+a.txt  b.txt  hello  world
+/opt/new # mkdir hii
+mkdir: can't create directory 'hii': Read-only file system
+/opt/new # rm a.txt 
+rm: remove 'a.txt'? y
+rm: can't remove 'a.txt': Read-only file system
+/opt/new # ls
+a.txt  b.txt  hello  world
+/opt/new # exit
+[ashu@docker-host ashu-compose-examples]$ 
+```
+
+### more demo
+
+```
+[ashu@docker-host ashu-compose-examples]$ docker run -itd --name ashuc3 -v ashuvol1:/mnt/new:ro -v ashuvol2:/opt/fine:rw alpine037e1c566615cce2fae7513c00dc4a722485ddbbb112de807b62979534993f5f
+[ashu@docker-host ashu-compose-examples]$ 
+```
+
+
 
 
 
