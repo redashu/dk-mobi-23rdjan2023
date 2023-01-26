@@ -268,6 +268,27 @@ MYSQL_USER=ashu
 MYSQL_PASSWORD=AshuDb@098
 ```
 
+### Docker Storage 
+
+<img src="st.png">
+
+### docker configuration location 
+
+<img src="st2.png">
+
+### storage to container 
+
+<img src="st3.png">
+
+### two ways to give storage to container 
+
+<img src="st4.png">
+
+### volume sharing with containers 
+
+<img src="st5.png">
+
+
 
 
 
