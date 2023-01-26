@@ -238,5 +238,36 @@ ashu-app.yaml  docker-compose.yaml
   469  docker-compose  -f  ashu-app.yaml  logs -f  ashu-db-app   
 ```
 
+### Uisng ENV file with compsoe 
+
+```
+version: '3.8'
+services:
+  ashu-ui-app:
+    image: adminer # open source sample UI image 
+    container_name: ashu-ui-c1
+    ports:
+    - 1234:8080 
+    depends_on:
+    - ashu-db-app
+  ashu-db-app:
+    image: mysql
+    container_name: ashu-db-c1
+    environment: # create / update ENV variable in container 
+      MYSQL_ROOT_PASSWORD: "MobiDb@098"
+    env_file: .cred.env 
+      
+    
+```
+
+### env file --- .cred.env 
+
+```
+
+MYSQL_USER=ashu
+MYSQL_PASSWORD=AshuDb@098
+```
+
+
 
 
