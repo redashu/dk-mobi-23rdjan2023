@@ -221,7 +221,22 @@ ashu-app.yaml  docker-compose.yaml
 
 <img src="db.png">
 
+### --- logs 
 
+```
+ 458  history 
+  459  docker-compose  -f  ashu-app.yaml   ps
+  460  docker-compose  -f  ashu-app.yaml   stop ashu-ui-app 
+  461  docker-compose  -f  ashu-app.yaml   ps
+  462  docker-compose  -f  ashu-app.yaml   start ashu-ui-app 
+  463  docker-compose  -f  ashu-app.yaml   ps
+  464  history 
+  465  docker-compose  -f  ashu-app.yaml   down 
+  466  docker-compose  -f  ashu-app.yaml   up -d
+  467  docker-compose  -f  ashu-app.yaml   ps
+  468  docker-compose  -f  ashu-app.yaml  logs  ashu-db-app   
+  469  docker-compose  -f  ashu-app.yaml  logs -f  ashu-db-app   
+```
 
 
 
