@@ -354,6 +354,58 @@ a.txt  b.txt  hello  world
 ```
 
 
+### Using Compose for volume purpose 
+
+```
+version: '3.8'
+volumes: # creating volume 
+  ashu-vol-db: # name of volume 
+  ashu-gen-data:
+services:
+  ashu-ui-app:
+    image: adminer # open source sample UI image 
+    volumes:
+    - ashu-gen-data:/mnt/ok
+    container_name: ashu-ui-c1
+    ports:
+    - 1234:8080 
+    depends_on:
+    - ashu-db-app
+  ashu-db-app:
+    image: mysql
+    container_name: ashu-db-c1
+    environment: # create / update ENV variable in container 
+      MYSQL_ROOT_PASSWORD: "MobiDb@098"
+    env_file: 
+    - .cred.env 
+    volumes: # mounting volume
+    - ashu-vol-db:/var/lib/mysql/ # default mysql data location 
+    - ashu-gen-data:/var/log/mysql
+      
+    
+```
+
+### testing -- Note: compose down will not be removing volumes
+
+```
+[ashu@docker-host ashu-compose-examples]$ ls
+ashu-app.yaml  docker-compose.yaml
+[ashu@docker-host ashu-compose-examples]$ docker-compose -f ashu-app.yaml up -d
+[+] Running 5/5
+ ⠿ Network ashu-compose-examples_default         Created                                                                  0.0s
+ ⠿ Volume "ashu-compose-examples_ashu-gen-data"  Created                                                                  0.0s
+ ⠿ Volume "ashu-compose-examples_ashu-vol-db"    Created                                                                  0.0s
+ ⠿ Container ashu-db-c1                          Started                                                                  0.7s
+ ⠿ Container ashu-ui-c1                          Started                                                                  1.2s
+[ashu@docker-host ashu-compose-examples]$ docker-compose -f ashu-app.yaml down 
+[+] Running 3/3
+ ⠿ Container ashu-ui-c1                   Removed                                                                         0.3s
+ ⠿ Container ashu-db-c1                   Removed                                                                         2.1s
+ ⠿ Network ashu-compose-examples_default  Removed                                                                         0.1s
+[ashu@docker-host ashu-compose-examples]$ 
+```
+
+
 
 
 
