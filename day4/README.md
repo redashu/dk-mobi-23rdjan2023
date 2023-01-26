@@ -163,6 +163,65 @@ ashu-ui-c1          ashunginx           webappv1            a8b5aa15a99d        
 ashujkc1            ashujenkins         v1                  d2477f82faa1        778MB
 ```
 
+### Example 3 
+
+```
+version: '3.8'
+services:
+  ashu-ui-app:
+    image: adminer # open source sample UI image 
+    container_name: ashu-ui-c1
+    ports:
+    - 1234:8080 
+    depends_on:
+    - ashu-db-app
+  ashu-db-app:
+    image: mysql
+    container_name: ashu-db-c1
+    environment: # create / update ENV variable in container 
+      MYSQL_ROOT_PASSWORD: "MobiDb@098"
+      MYSQL_USER: ashu
+      MYSQL_PASSWORD: "AshuDb@098"
+```
+
+### lets run it 
+
+```
+[ashu@docker-host ashu-compose-examples]$ ls
+ashu-app.yaml  docker-compose.yaml
+[ashu@docker-host ashu-compose-examples]$ docker-compose  -f  ashu-app.yaml  up -d
+[+] Running 20/20
+ ⠿ ashu-db-app Pulled                                                                                                     7.7s
+   ⠿ 2c57acc5afca Already exists                                                                                          0.0s
+   ⠿ 0a990ab965c1 Pull complete                                                                                           0.1s
+   ⠿ 7acb6a84f0f1 Pull complete                                                                                           0.2s
+   ⠿ 6a2351a691a4 Pull complete                                                                                           0.5s
+   ⠿ cdd0aae0ac1a Pull complete                                                                                           0.5s
+   ⠿ 0c024d6bf869 Pull complete                                                                                           0.6s
+   ⠿ e536ea8ecf65 Pull complete                                                                                           3.7s
+   ⠿ d24661dff86b Pull complete                                                                                           3.8s
+   ⠿ 95ef82dfce7a Pull complete                                                                                           7.3s
+   ⠿ c9a31e1bffa1 Pull complete                                                                                           7.4s
+   ⠿ 4edb4789da39 Pull complete                                                                                           7.5s
+ ⠿ ashu-ui-app Pulled                                                                                                     6.9s
+   ⠿ bbeef03cda1f Pull complete                                                                                           4.4s
+   ⠿ f7b968dccc7e Pull complete                                                                                           6.1s
+   ⠿ fcd6d6979307 Pull complete                                                                                           6.2s
+   ⠿ 5694c6147308 Pull complete                                                                                           6.3s
+   ⠿ d03ab2def1a9 Pull complete                                                                                           6.4s
+   ⠿ 9bd1cddd5008 Pull complete                                                                                           6.5s
+   ⠿ 5f49a2ac8ec9 Pull complete                                                                                           6.6s
+[+] Running 2/2
+ ⠿ Container ashu-db-c1  Started                                                                                          5.3s
+ ⠿ Container ashu-ui-c1  Started                                                                                          1.1s
+[ashu@docker-host ashu-compose-examp
+```
+
+### ui -db connecting 
+
+<img src="db.png">
+
+
 
 
 
