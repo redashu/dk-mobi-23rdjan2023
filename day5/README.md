@@ -304,6 +304,37 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 <img src="node.png">
 
 
+## TOmcat 
+
+### dockerfile 
+
+```
+# Use an official Tomcat image as the base image
+FROM tomcat
+WORKDIR  /usr/local/tomcat/webapps/
+RUN mkdir ashu
+# Copy the WAR file for the application to the Tomcat webapps directory
+COPY myapp ashu/
+
+# Expose the default Tomcat port
+EXPOSE 8080
+
+```
+
+### yaml file 
+
+```
+version: '3'
+services:
+  myapp:
+    build: 
+      context: . 
+      dockerfile: tomcat.dockerfile
+    ports:
+      - "8080:8080"
+    
+
+```
 
 
 
