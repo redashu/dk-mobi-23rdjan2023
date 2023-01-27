@@ -231,6 +231,53 @@ Client Version: version.Info{Major:"1", Minor:"23", GitVersion:"v1.23.16", GitCo
 
 <img src="info.png">
 
+### SOme configuration location in k8s -- master node 
+
+```
+[root@control-plane ~]# hostname
+control-plane
+[root@control-plane ~]# cd  /etc/kubernetes/
+[root@control-plane kubernetes]# ls
+admin.conf  controller-manager.conf  kubelet.conf  manifests  pki  scheduler.conf
+[root@control-plane kubernetes]# 
+[root@control-plane kubernetes]# 
+[root@control-plane kubernetes]# ls manifests/
+etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
+[root@control-plane kubernetes]# 
+
+```
+
+### using kubeconfig file to authenticate k8s control plane from client machine 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  cluster-info  
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  cluster-info  --kubeconfig admin.conf 
+Kubernetes control plane is running at https://172.31.29.6:6443
+CoreDNS is running at https://172.31.29.6:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### one more try -- getting list of nodes in k8s cluster 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  get  nodes    --kubeconfig admin.conf 
+NAME            STATUS   ROLES                  AGE     VERSION
+control-plane   Ready    control-plane,master   5h17m   v1.23.16
+node1           Ready    <none>                 5h13m   v1.23.16
+node2           Ready    <none>                 5h13m   v1.23.16
+node3           Ready    <none>                 5h13m   v1.23.16
+[ashu@docker-host ashu-apps]$ 
+```
+
+
+
 
  
 
