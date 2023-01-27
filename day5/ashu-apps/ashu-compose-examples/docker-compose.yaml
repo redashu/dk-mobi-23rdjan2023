@@ -1,0 +1,17 @@
+version:  '3.8' # version of compose file 
+services: # name of apps which you want to containerize
+  ashu-jenkins:
+    image: ashujenkins:v1 # image i want to build
+    build:  # to build image using dockerfile 
+      context: ../tools # location of dockerfile 
+      dockerfile: jenkins.dockerfile  # name of dockerfile 
+    container_name: ashujkc1
+    restart: always
+    ports: 
+    - 1199:8080 
+  ashu-ui: # name of service 
+    image: ashunginx:webappv1 # name of image 
+    container_name: ashu-ui-c1 # name of container 
+    restart: always  # restart policy 
+    ports: # port mapping 
+    - 1234:80

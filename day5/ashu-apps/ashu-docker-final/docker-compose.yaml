@@ -1,0 +1,25 @@
+version: '3.8'
+networks: # to create network like docker network create ashubrx1 
+  ashubrx1:
+volumes: # creating volume like -- docker volume create ashu-volx1 
+  ashu-volx1: 
+services:
+  ashudata-svc1:
+    image: ashudata:testv1 
+    build: 
+      context: .
+      dockerfile: Dockerfile 
+    container_name: ashudatac1 
+    volumes: # using volumes 
+    - ashu-volx1:/opt/mydata/
+    networks: # using network 
+      - ashubrx1 
+  ashu-ui-test:
+    image: nginx 
+    container_name: ashungc1 
+    ports:
+      - 1234:80
+    networks:
+      - ashubrx1
+    volumes: # as volume bind or bind mount 
+    - /home/ashu/ashu-apps/ashu-docker-final/project-html-website:/usr/share/nginx/html/
