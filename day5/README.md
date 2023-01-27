@@ -299,6 +299,11 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 [ashu@docker-host ashu-apps]$ 
 ```
 
+### mInion node -- compoent 
+
+<img src="node.png">
+
+
 
 
 
