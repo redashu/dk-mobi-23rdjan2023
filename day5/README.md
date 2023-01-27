@@ -276,6 +276,29 @@ node3           Ready    <none>                 5h13m   v1.23.16
 [ashu@docker-host ashu-apps]$ 
 ```
 
+### setting kubeconfig file at default location 
+
+```
+[ashu@docker-host ashu-apps]$ mkdir  ~/.kube 
+mkdir: cannot create directory ‘/home/ashu/.kube’: File exists
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ cp -v admin.conf   ~/.kube/config  
+‘admin.conf’ -> ‘/home/ashu/.kube/config’
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  get  nodes
+NAME            STATUS   ROLES                  AGE     VERSION
+control-plane   Ready    control-plane,master   5h19m   v1.23.16
+node1           Ready    <none>                 5h15m   v1.23.16
+node2           Ready    <none>                 5h15m   v1.23.16
+node3           Ready    <none>                 5h15m   v1.23.16
+[ashu@docker-host ashu-apps]$ kubectl  cluster-info  
+Kubernetes control plane is running at https://172.31.29.6:6443
+CoreDNS is running at https://172.31.29.6:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[ashu@docker-host ashu-apps]$ 
+```
+
 
 
 
