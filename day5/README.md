@@ -153,6 +153,85 @@ services:
     - /home/ashu/ashu-apps/ashu-docker-final/project-html-website:/usr/share/nginx/html/
 ```
 
+## Application deployment in container -- in a distributed env -- 
+
+### problems with cluster of containers
+
+<img src="prob.png">
+
+
+ ### container orchestration tools 
+ 
+ <img src="corch.png">
+ 
+ ### Introduction to kubernetes 
+ 
+ <img src="k8s.png">
+ 
+ ### k8s architecture at host level 
+ 
+ <img src="k8s1.png">
+ 
+ ### K8s client machine software / tools options to send request to k8s control plane 
+ 
+ <img src="client.png">
+ 
+ ## Client side software installation of k8s 
+ 
+ ### ON linux box 
+ ```
+ [root@docker-host ~]# yum install kubectl-1.23* 
+Failed to set locale, defaulting to C
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+kubernetes                                                                                       | 1.4 kB  00:00:00     
+kubernetes/x86_64/primary                                                                        | 124 kB  00:00:00     
+kubernetes                                                                                                      920/920
+Resolving Dependencies
+--> Running transaction check
+---> Package kubectl.x86_64 0:1.23.16-0 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+========================================================================================================================
+ Package                    Arch                      Version                       Repository                     Size
+========================================================================================================================
+Installing:
+ kubectl                    x86_64                    1.23.16-0                     kubernetes                    9.8 M
+
+
+ ```
+ 
+ ### verify 
+ 
+ ```
+ [ashu@docker-host ashu-apps]$ kubectl  version --client 
+Client Version: version.Info{Major:"1", Minor:"23", GitVersion:"v1.23.16", GitCommit:"60e5135f758b6e43d0523b3277e8d34b4ab3801f", GitTreeState:"clean", BuildDate:"2023-01-18T16:01:10Z", GoVersion:"go1.19.5", Compiler:"gc", Platform:"linux/amd64"}
+[ashu@docker-host ashu-apps]$ 
+
+ ```
+ 
+ ### LInk for k8s client (kubectl installation)
+
+[link](https://kubernetes.io/docs/tasks/tools/)
+
+### k8s system setup methods 
+
+<img src="setup.png">
+
+### COntrol plane components 
+
+<img src="cp.png">
+
+### minion side components 
+
+<img src="minion.png">
+
+## Control plane -- apiserver / kube-apiserver component Info 
+
+<img src="info.png">
+
+
  
 
 
