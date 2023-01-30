@@ -344,5 +344,88 @@ pod "ashu-webpod" deleted
 
 
 ```
+## Solution of task 1 
+
+### YAML 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod1
+  name: ashupod1
+spec:
+  containers:
+  - image: busybox
+    name: ashupod1
+    command: ["ping","8.8.8.8"] # replacing default CMD in docker image 
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+### deploy it 
+
+```
+kubectl apply -f task1.yaml 
+```
+
+### transfer it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl logs ashupod1
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=0 ttl=52 time=0.762 ms
+64 bytes from 8.8.8.8: seq=1 ttl=52 time=0.744 ms
+64 bytes from 8.8.8.8: seq=2 ttl=52 time=0.720 ms
+64 bytes from 8.8.8.8: seq=3 ttl=52 time=0.739 ms
+64 bytes from 8.8.8.8: seq=4 ttl=52 time=0.731 ms
+64 bytes from 8.8.8.8: seq=5 ttl=52 time=0.710 ms
+64 bytes from 8.8.8.8: seq=6 ttl=52 time=0.790 ms
+64 bytes from 8.8.8.8: seq=7 ttl=52 time=0.729 ms
+64 bytes from 8.8.8.8: seq=8 ttl=52 time=0.656 ms
+64 bytes from 8.8.8.8: seq=9 ttl=52 time=0.747 ms
+64 bytes from 8.8.8.8: seq=10 ttl=52 time=0.764 ms
+[ashu@docker-host k8s-app-deploy]$ kubectl logs ashupod1  >logs.txt 
+[ashu@docker-host k8s-app-deploy]$ ls
+ashupod1.yaml  autopod.json  autopod.yaml  logs.txt  task1.yaml
+[ashu@docker-host k8s-app-deploy]$ kubectl  exec  ashupod1 -- sh 
+[ashu@docker-host k8s-app-deploy]$ kubectl  exec -it  ashupod1 -- sh 
+/ # 
+/ # ls  /
+bin    dev    etc    home   lib    lib64  proc   root   sys    tmp    usr    var
+/ # mkdir /opt
+/ # ls 
+bin    dev    etc    home   lib    lib64  opt    proc   root   sys    tmp    usr    var
+/ # exit
+[ashu@docker-host k8s-app-deploy]$ ls
+ashupod1.yaml  autopod.json  autopod.yaml  logs.txt  task1.yaml
+[ashu@docker-host k8s-app-deploy]$ kubectl cp logs.txt  ashupod1:/opt/
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  exec -it  ashupod1 -- ls /opt
+logs.txt
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+### update more 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  exec -it  ashupod1 -- sh 
+/ # 
+/ # cd /opt/
+/opt # ls
+logs.txt
+/opt # echo node3  >>logs.txt 
+/opt # cat logs.txt 
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=0 ttl=52 time=0.762 ms
+64 bytes from 8.8.8.8: seq=1 ttl=52 time=0.744 ms
+64 bytes from 8.8.8.8: seq=2 ttl=52 time=0.720 ms
+64 bytes from 8.8.8.8: se
+```
+
 
 
