@@ -250,6 +250,99 @@ LAST SEEN   TYPE      REASON      OBJECT                     MESSAGE
 pod "ashu-test-pod" deleted
 ```
 
+## Generate POd YAML and instance also 
 
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  run  ashu-webpod  --image=docker.io/dockerashu/ashu-ui:mobiv1 --port 80 
+pod/ashu-webpod created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods
+NAME          READY   STATUS    RESTARTS   AGE
+ashu-webpod   1/1     Running   0          4s
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### YAML / JSON 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  run  ashu-webpod  --image=docker.io/dockerashu/ashu-ui:mobiv1 --port 80  --dry-run=client -o yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashu-webpod
+  name: ashu-webpod
+spec:
+  containers:
+  - image: docker.io/dockerashu/ashu-ui:mobiv1
+    name: ashu-webpod
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+[ashu@docker-host k8s-app-deploy]$ kubectl  get pods
+No resources found in default namespace.
+[ashu@docker-host k8s-app-deploy]$ kubectl  run  ashu-webpod  --image=docker.io/dockerashu/ashu-ui:mobiv1 --port 80  --dry-run=client -o yaml  >autopod.yaml 
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+### JSOn 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  run  ashu-webpod  --image=docker.io/dockerashu/ashu-ui:mobiv1 --port 80  --dry-run=client -o json 
+{
+    "kind": "Pod",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "ashu-webpod",
+        "creationTimestamp": null,
+        "labels": {
+            "run": "ashu-webpod"
+        }
+    },
+    "spec": {
+        "containers": [
+            {
+                "name": "ashu-webpod",
+                "image": "docker.io/dockerashu/ashu-ui:mobiv1",
+                "ports": [
+                    {
+                        "containerPort": 80
+                    }
+                ],
+                "resources": {}
+            }
+        ],
+        "restartPolicy": "Always",
+        "dnsPolicy": "ClusterFirst"
+    },
+    "status": {}
+}
+[ashu@docker-host k8s-app-deploy]$ kubectl  run  ashu-webpod  --image=docker.io/dockerashu/ashu-ui:mobiv1 --port 80  --dry-run=client -o json >autopod.json 
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### lets test it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ ls
+ashupod1.yaml  autopod.json  autopod.yaml
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f autopod.json 
+pod/ashu-webpod created
+[ashu@docker-host k8s-app-deploy]$ kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+ashu-webpod   1/1     Running   0          4s
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl delete -f autopod.json 
+pod "ashu-webpod" deleted
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
 
 
