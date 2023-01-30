@@ -73,6 +73,40 @@ mobiv1: digest: sha256:e6e1111eddfee0b1ca40d72d04e07f7f0c58153ee448575272572b0be
 [ashu@docker-host webapps]$ 
 ```
 
+### Most sample Pod YAML file 
+
+```
+apiVersion: v1 # apiserver version to target 
+kind: Pod  # Resource on apiversion 
+metadata: # info about Resource like POd 
+  name: ashu-test-pod  
+spec: # need of pod like services in compose 
+  containers: # number of container for my app 
+  - image: docker.io/dockerashu/ashu-ui:mobiv1
+    name: ashuc1
+    ports:
+    - containerPort: 80 # container app port number 
+```
+
+### lets deploy it 
+
+```
+[ashu@docker-host ashu-apps]$ ls
+admin.conf  ashu-compose-examples  ashu-docker-final  javaapp  k8s-app-deploy  tools  webapps
+[ashu@docker-host ashu-apps]$ cd  k8s-app-deploy/
+[ashu@docker-host k8s-app-deploy]$ ls
+ashupod1.yaml
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f  ashupod1.yaml 
+pod/ashu-test-pod created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods
+NAME               READY   STATUS    RESTARTS   AGE
+ashu-test-pod      1/1     Running   0          14s
+daniela-test-pod   1/1     Running   0          7s
+scunha-test-pod    1/1     Running   0          12s
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
 
 
 
