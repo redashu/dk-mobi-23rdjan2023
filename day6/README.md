@@ -427,5 +427,57 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 64 bytes from 8.8.8.8: se
 ```
 
+### Namespace in k8s 
+
+<img src="nd.png">
+
+### checking namespaces list 
+
+```
+[ashu@docker-host webapps]$ kubectl get  namespaces
+NAME                   STATUS   AGE
+default                Active   3d4h
+kube-node-lease        Active   3d4h
+kube-public            Active   3d4h
+kube-system            Active   3d4h
+kubernetes-dashboard   Active   3d4h
+[ashu@docker-host webapps]$ 
+```
+
+### creating and setting ns for yourself 
+
+```
+[ashu@docker-host webapps]$ kubectl create  namespace  ashu-project 
+namespace/ashu-project created
+[ashu@docker-host webapps]$ kubectl get ns
+NAME                   STATUS   AGE
+ashu-project           Active   2s
+default                Active   3d4h
+jpconceicao-project    Active   0s
+kube-node-lease        Active   3d4h
+kube-public            Active   3d4h
+kube-system            Active   3d4h
+kubernetes-dashboard   Active   3d4h
+[ashu@docker-host webapps]$ kubectl  config set-context --current --namespace=ashu-project
+Context "kubernetes-admin@kubernetes" modified.
+[ashu@docker-host webapps]$ kubectl  get  pods
+No resources found in ashu-project namespace.
+[ashu@docker-host webapps]$ 
+
+```
+
+### checking default namespace 
+
+```
+[ashu@docker-host webapps]$ kubectl  config get-contexts 
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-project
+[ashu@docker-host webapps]$ 
+
+```
+
+
+
+
 
 
