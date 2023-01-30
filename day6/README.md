@@ -476,6 +476,54 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 
 ```
 
+### deploy pod in target namespaces 
+
+```
+apiVersion: v1 # apiserver version to target 
+kind: Pod  # Resource on apiversion 
+metadata: # info about Resource like POd 
+  name: ashu-test-pod  
+  namespace: default # target namespace --if you have permission for that 
+spec: # need of pod like services in compose 
+  containers: # number of container for my app 
+  - image: docker.io/dockerashu/ashu-ui:mobiv1
+    name: ashuc1
+    ports:
+    - containerPort: 80 # container app port number 
+```
+
+### 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f  ashupod1.yaml 
+pod/ashu-test-pod created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods
+NAME            READY   STATUS    RESTARTS   AGE
+ashu-test-pod   1/1     Running   0          111s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods -n default 
+NAME               READY   STATUS    RESTARTS   AGE
+ashu-test-pod      1/1     Running   0          12s
+daniela-test-pod   1/1     Running   0          5s
+scunha-test-pod    1/1     Running   0          7s
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+### deleting pods 
+
+```
+ashu@docker-host k8s-app-deploy]$ kubectl delete  -f  ashupod1.yaml 
+pod "ashu-test-pod" deleted
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  po 
+NAME            READY   STATUS    RESTARTS   AGE
+ashu-test-pod   1/1     Running   0          3m8s
+[ashu@docker-host k8s-app-deploy]$ kubectl delete pod ashu-test-pod
+pod "ashu-test-pod" deleted
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
 
 
 
