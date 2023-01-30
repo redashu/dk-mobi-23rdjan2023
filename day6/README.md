@@ -579,6 +579,53 @@ ashu-tomcat   1/1     Running   0          68s
 [ashu@docker-host k8s-app-deploy]$ 
 ```
 
+## LImitrange for Namespace 
+
+```
+apiVersion: v1
+kind: LimitRange 
+metadata:
+  name: ashu-ns-limits 
+  namespace: ashu-project 
+spec:
+  limits: # creating limits 
+  - max:
+      cpu: 400m
+      memory: 800M 
+    min: 
+      cpu: 10m
+      memory: 20M
+    default: # when nothing is define if no limits are defined then default works
+      cpu: 100m
+      memory: 100M 
+    defaultRequest: # to create pod 
+      cpu: 50m
+      memory: 80M 
+    type: Container 
+```
+
+### deploy it 
+
+```
+ashu@docker-host k8s-app-deploy]$ ls
+ashupod1.yaml  autopod.json  autopod.yaml  logs.txt  mynslimitcg.yaml  task1.yaml  tomcat.yaml
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f mynslimitcg.yaml 
+limitrange/ashu-ns-limits created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  limitranges
+NAME             CREATED AT
+ashu-ns-limits   2023-01-30T13:02:08Z
+[ashu@docker-host k8s-app-deploy]$ kubectl describe   limitranges ashu-ns-limits
+Name:       ashu-ns-limits
+Namespace:  ashu-project
+Type        Resource  Min  Max   Default Request  Default Limit  Max Limit/Request Ratio
+----        --------  ---  ---   ---------------  -------------  -----------------------
+Container   memory    20M  800M  80M              100M           -
+Container   cpu       10m  400m  50m              100m           -
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+
 
 
 
