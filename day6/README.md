@@ -524,6 +524,63 @@ pod "ashu-test-pod" deleted
 
 ```
 
+## Understanding Cgroups in k8s --to limit resouces in Pod container 
+
+<img src="cg.png">
+
+### lets implement it 
+
+### creating pod yaml of tomcat 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  run  ashu-tomcat  --image=tomcat --port 8080 --dry-run=client -o yaml >tomcat.yaml
+```
+
+### creating cgroup limits for this pod 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashu-tomcat
+  name: ashu-tomcat # name of pod 
+spec:
+  containers:
+  - image: tomcat
+    name: ashu-tomcat
+    ports:
+    - containerPort: 8080
+    resources:  # for Cgroup
+      requests: # default request size of pod -- 
+        memory: 100M
+        cpu: 50m 
+      limits: # max limit of POd container 
+        memory: 300M # 300 MiB
+        cpu: 200m # 1vcpu == 1000 mili cores (1000m)   
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+### lets deploy it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f tomcat.yaml 
+pod/ashu-tomcat created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods
+NAME          READY   STATUS              RESTARTS   AGE
+ashu-tomcat   0/1     ContainerCreating   0          12s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods
+NAME          READY   STATUS    RESTARTS   AGE
+ashu-tomcat   1/1     Running   0          68s
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+
+
 
 
 
