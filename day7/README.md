@@ -260,6 +260,47 @@ ashu-webapp-77d578f4fd-xdjhz   1/1     Running   0          21s   192.168.166.16
 [ashu@docker-host k8s-app-deploy]$ 
 ```
 
+### Container Networking Interface by K8s 
+
+<img src="cni.png">
+
+### Overlay Network Bridge by CNI in k8s 
+
+<img src="overlay.png">
+
+### CNI plugins for Network implementations 
+
+<img src="plugin.png">
+
+### checking k8s internal components in kube-system namespace
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods -n kube-system 
+NAME                                       READY   STATUS    RESTARTS      AGE
+calico-kube-controllers-6695595bd4-v77rm   1/1     Running   3 (22h ago)   4d3h
+calico-node-bhqnd                          1/1     Running   3 (22h ago)   4d3h
+calico-node-mnrg9                          1/1     Running   3 (22h ago)   4d3h
+calico-node-rxrqc                          1/1     Running   3 (22h ago)   4d3h
+calico-node-skjp4                          1/1     Running   3 (22h ago)   4d3h
+coredns-bd6b6df9f-5zthd                    1/1     Running   3 (22h ago)   4d4h
+coredns-bd6b6df9f-v2r76                    1/1     Running   3 (22h ago)   4d4h
+etcd-control-plane                         1/1     Running   3 (22h ago)   4d4h
+kube-apiserver-control-plane               1/1     Running   3 (22h ago)   4d4h
+kube-controller-manager-control-plane      1/1     Running   3 (22h ago)   4d4h
+kube-proxy-9pcjv                           1/1     Running   3 (22h ago)   4d4h
+kube-proxy-dl7g4                           1/1     Running   3 (22h ago)   4d4h
+kube-proxy-hvjbb                           1/1     Running   3 (22h ago)   4d4h
+kube-proxy-n6ddb                           1/1     Running   3 (22h ago)   4d4h
+kube-scheduler-control-plane               1/1     Running   3 (22h ago)   4d4h
+metrics-server-5c69db44f5-p97gf            1/1     Running   3 (22h ago)   4d4h
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### Verify pod CNI plugin 
+
+<img src="vf.png">
+
 
 
 
