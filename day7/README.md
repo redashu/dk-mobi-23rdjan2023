@@ -198,5 +198,69 @@ appashu_deployment.yaml  ashupod1.yaml  autopod.json  autopod.yaml  logs.txt  my
 
 <img src="apiv.png">
 
+### lets deploy YAML file of Deployment 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f appashu_deployment.yaml 
+deployment.apps/ashu-webapp configured
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deployment 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-webapp   1/1     1            1           50s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-webapp   1/1     1            1           52s
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  po 
+NAME                           READY   STATUS    RESTARTS   AGE
+ashu-webapp-77d578f4fd-k4v67   1/1     Running   0          18s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  po -o wide
+NAME                           READY   STATUS    RESTARTS   AGE   IP               NODE    NOMINATED NODE   READINESS GATES
+ashu-webapp-77d578f4fd-k4v67   1/1     Running   0          23s   192.168.104.36   node2   <none>           <none>
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+### self healing of pods
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl   get  deployment 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-webapp   1/1     1            1           5m59s
+[ashu@docker-host k8s-app-deploy]$ kubectl   get  pods
+NAME                           READY   STATUS    RESTARTS   AGE
+ashu-webapp-77d578f4fd-k4v67   1/1     Running   0          5m25s
+[ashu@docker-host k8s-app-deploy]$ kubectl  delete  pods ashu-webapp-77d578f4fd-k4v67
+pod "ashu-webapp-77d578f4fd-k4v67" deleted
+[ashu@docker-host k8s-app-deploy]$ kubectl   get  pods -o wide
+NAME                           READY   STATUS    RESTARTS   AGE   IP               NODE    NOMINATED NODE   READINESS GATES
+ashu-webapp-77d578f4fd-7mjvt   1/1     Running   0          6s    192.168.135.54   node3   <none>           <none>
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+### horizental scaling of pods 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-webapp   1/1     1            1           7m32s
+[ashu@docker-host k8s-app-deploy]$ kubectl  scale  deployment  ashu-webapp  --replicas=3
+deployment.apps/ashu-webapp scaled
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-webapp   1/3     3            1           7m51s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-webapp   3/3     3            3           8m2s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get po -o wide
+NAME                           READY   STATUS    RESTARTS   AGE   IP                NODE    NOMINATED NODE   READINESS GATES
+ashu-webapp-77d578f4fd-7mjvt   1/1     Running   0          98s   192.168.135.54    node3   <none>           <none>
+ashu-webapp-77d578f4fd-nvmjw   1/1     Running   0          21s   192.168.104.40    node2   <none>           <none>
+ashu-webapp-77d578f4fd-xdjhz   1/1     Running   0          21s   192.168.166.168   node1   <none>           <none>
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+
+
 
 
