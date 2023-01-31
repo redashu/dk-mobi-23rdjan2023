@@ -117,4 +117,86 @@ v1: digest: sha256:2d149feeebc82e279fa85ac699ae18ac7e453e33d090517366cb230a28d44
 
 ```
 
+### Lets deploy above image to k8s 
+
+### verify namespace 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  get  ns
+NAME                   STATUS   AGE
+acsilvaproject         Active   21h
+ashu-project           Active   21h
+cfantao-project        Active   21h
+daniela-project        Active   21h
+default                Active   4d2h
+dvvlad-project         Active   21h
+jji-project            Active   21h
+jjunior-ns             Active   21h
+jpconceicao-project    Active   21h
+kube-node-lease        Active   4d2h
+kube-public            Active   4d2h
+kube-system            Active   4d2h
+kubernetes-dashboard   Active   4d2h
+lzmartin-project       Active   21h
+nmgrilo-project        Active   21h
+scunha-project         Active   21h
+[ashu@docker-host ashu-apps]$ kubectl  config get-contexts 
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-project
+[ashu@docker-host ashu-apps]$ 
+```
+
+### lets clean up namespace data 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  get  pods
+NAME          READY   STATUS    RESTARTS      AGE
+ashu-tomcat   1/1     Running   1 (20h ago)   21h
+[ashu@docker-host ashu-apps]$ kubectl delete pods ashu-tomcat 
+pod "ashu-tomcat" deleted
+[ashu@docker-host ashu-apps]$ 
+
+
+```
+
+### problem with Pods 
+
+<img src="podsp.png">
+
+## Introduction to COntrollers in k8s 
+
+### importance of RC & RS 
+
+<img src="rs.png">
+
+### Incase of webapp updates / upgrade  RC & RS is not good 
+
+<img src="rsp.png">
+
+### understanding the Most advanced controllers in k8s -- for stateless and statefull applications 
+
+### stateless app controller -- Deployment 
+
+<img src="dep.png">
+
+### creating Deployment YAML using kubectl 
+
+```
+ashu@docker-host ashu-apps]$ ls
+admin.conf  ashu-compose-examples  ashu-docker-final  javaapp  k8s-app-deploy  tools  webapps
+[ashu@docker-host ashu-apps]$ cd  k8s-app-deploy/
+[ashu@docker-host k8s-app-deploy]$ ls
+ashupod1.yaml  autopod.json  autopod.yaml  logs.txt  mynslimitcg.yaml  task1.yaml  tomcat.yaml
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  deployment  ashu-webapp --image=docker.io/dockerashu/ashu-mobiwebapp:v  --port 80 --dry-run=client -o yaml >appashu_deployment.yaml 
+[ashu@docker-host k8s-app-deploy]$ ls
+appashu_deployment.yaml  ashupod1.yaml  autopod.json  autopod.yaml  logs.txt  mynslimitcg.yaml  task1.yaml  tomcat.yaml
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### more visual understanding of apiserver with its apiversion expose resources 
+
+<img src="apiv.png">
+
+
 
