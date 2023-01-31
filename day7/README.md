@@ -360,6 +360,50 @@ ashu-app-lb   NodePort   10.103.56.170   <none>        1234:31960/TCP   13s
 
 ```
 
+## By default page won't be accessible so you have to put the label of pod to selector section of service yaml
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get pods --show-labels 
+NAME                           READY   STATUS    RESTARTS   AGE    LABELS
+ashu-webapp-77d578f4fd-7mjvt   1/1     Running   0          113m   app=ashu-webapp,pod-template-hash=77d578f4fd
+ashu-webapp-77d578f4fd-nvmjw   1/1     Running   0          112m   app=ashu-webapp,pod-template-hash=77d578f4fd
+ashu-webapp-77d578f4fd-xdjhz   1/1     Running   0          112m   app=ashu-webapp,pod-template-hash=77d578f4fd
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### updated YAML file of service 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-app-lb
+  name: ashu-app-lb
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+  selector: # pod finder using label of pods 
+    app: ashu-webapp # key and value are label of my pods 
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+### apply yaml again 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f ashunodeportlb.yaml 
+service/ashu-app-lb configured
+```
+
+
 
 
 
