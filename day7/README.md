@@ -301,6 +301,67 @@ metrics-server-5c69db44f5-p97gf            1/1     Running   3 (22h ago)   4d4h
 
 <img src="vf.png">
 
+### Overal Networking flow of k8s app
+
+<img src="finalnet.png">
+
+### Introduction to Internal LB for pods in k8s using service resource in k8s 
+
+<img src="svc.png">
+
+### type of service in k8s also Loadbalancer and Nodeport service 
+
+<img src="svct.png">
+
+### Lets implement NodePOrt service type to expose pod app to outside world 
+
+### understanding port mapping for service 
+
+<img src="portm.png">
+
+### lets create yaml 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  service 
+Create a service using a specified subcommand.
+
+Aliases:
+service, svc
+
+Available Commands:
+  clusterip    Create a ClusterIP service
+  externalname Create an ExternalName service
+  loadbalancer Create a LoadBalancer service
+  nodeport     Create a NodePort service
+
+Usage:
+  kubectl create service [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  service nodeport  ashu-app-lb  --tcp  1234:80  --dry-run=client -o yaml >ashunodeportlb.yaml 
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### lets create 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  apply -f  ashunodeportlb.yaml 
+service/ashu-app-lb created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  services 
+NAME          TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ashu-app-lb   NodePort   10.103.56.170   <none>        1234:31960/TCP   9s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  svc
+NAME          TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ashu-app-lb   NodePort   10.103.56.170   <none>        1234:31960/TCP   13s
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+
+
 
 
 
