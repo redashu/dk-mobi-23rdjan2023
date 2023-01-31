@@ -88,5 +88,33 @@ unknown flag: --build
 
 ```
 
-### 
+###  lets push image 
+
+```
+[ashu@docker-host ashu-compose-examples]$ ls
+ashu-app.yaml        httpd-compose.yaml  myapp                 tomcat.dockerfile
+docker-compose.yaml  httpd.dockerfile    project-html-website  tomcat.yaml
+[ashu@docker-host ashu-compose-examples]$ docker-compose -f httpd-compose.yaml down 
+[ashu@docker-host ashu-compose-examples]$ docker images  |   grep ashu
+dockerashu/ashu-mobiwebapp          v1        af4b91c944ef   4 minutes ago        461MB
+dockerashu/ashu-ui                  mobiv1    f45551527ab7   24 hours ago         144MB
+dockerashu/ashu-ui                  <none>    eff1395a1609   24 hours ago         144MB
+ashu-compose-examples-myapp         latest    133d735eb1da   3 days ago           475MB
+[ashu@docker-host ashu-compose-examples]$ docker login -u dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ashu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ashu@docker-host ashu-compose-examples]$ docker push  docker.io/dockerashu/ashu-mobiwebapp:v1
+The push refers to repository [docker.io/dockerashu/ashu-mobiwebapp]
+83c7de0e0d89: Pushed 
+15d4e0316d93: Pushed 
+2d3586eacb61: Mounted from dockerashu/ashucimg 
+v1: digest: sha256:2d149feeebc82e279fa85ac699ae18ac7e453e33d090517366cb230a28d449d2 size: 952
+[ashu@docker-host ashu-compose-examples]$ 
+
+```
+
 
