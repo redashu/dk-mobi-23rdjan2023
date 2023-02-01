@@ -110,4 +110,30 @@ ashu-mobi-ui-6c8874f549-bkvnk   1/1     Running   0          9s
 [ashu@docker-host k8s-app-deploy]$ 
 ```
 
+### using expose command to create service for auto match pod labels to the selector of service 
+
+<img src="lbb.png">
+
+### giving commands 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           10m
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  expose  deployment  ashu-mobi-ui  --type NodePort --port 1234 --target-port 80 --name ashu-lb-1 --dry-run=client -o yaml >ashu-ui-npsvc.yaml 
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+### let me create service 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f ashu-ui-npsvc.yaml 
+service/ashu-lb-1 created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  svc
+NAME        TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+ashu-lb-1   NodePort   10.99.78.161   <none>        1234:31020/TCP   4s
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
 
