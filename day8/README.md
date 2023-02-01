@@ -136,4 +136,59 @@ ashu-lb-1   NodePort   10.99.78.161   <none>        1234:31020/TCP   4s
 [ashu@docker-host k8s-app-deploy]$ 
 ```
 
+## HPA in k8s 
+
+<img src="hpa.png">
+
+### writing HPA rule 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           43m
+[ashu@docker-host k8s-app-deploy]$ kubectl autoscale  deployment ashu-mobi-ui  --min=3 --max=20  --cpu-percent=85 --dry-run=client -o yaml >hpa.yaml 
+[ashu@docker-host k8s-app-deploy]$
+```
+
+### implement HPA 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           53m
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f hpa.yaml 
+horizontalpodautoscaler.autoscaling/ashu-mobi-ui created
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl get  hpa
+NAME           REFERENCE                 TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+ashu-mobi-ui   Deployment/ashu-mobi-ui   <unknown>/85%   3         20        0          8s
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           53m
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+### 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl get  hpa
+NAME           REFERENCE                 TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+ashu-mobi-ui   Deployment/ashu-mobi-ui   <unknown>/85%   3         20        0          8s
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           53m
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   3/3     3            3           54m
+[ashu@docker-host k8s-app-deploy]$ kubectl  get po -owide
+NAME                            READY   STATUS    RESTARTS   AGE   IP                NODE    NOMINATED NODE   READINESS GATES
+ashu-mobi-ui-6c8874f549-bkvnk   1/1     Running   0          54m   192.168.135.51    node3   <none>           <none>
+ashu-mobi-ui-6c8874f549-bzpfz   1/1     Running   0          43s   192.168.166.167   node1   <none>           <none>
+ashu-mobi-ui-6c8874f549-hdvw2   1/1     Running   0          43s   192.168.104.58    node2   <none>           <none>
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+
 
