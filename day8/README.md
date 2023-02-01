@@ -190,5 +190,140 @@ ashu-mobi-ui-6c8874f549-hdvw2   1/1     Running   0          43s   192.168.104.5
 [ashu@docker-host k8s-app-deploy]$ 
 ```
 
+## many LB management and costing is very big problem 
+
+<img src="problb.png">
+
+### Introudcing Ingress controller 
+
+<img src="ingress.png">
+
+### deploy Nginx ingress controller in k8s
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+namespace/ingress-nginx created
+serviceaccount/ingress-nginx created
+serviceaccount/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+configmap/ingress-nginx-controller created
+service/ingress-nginx-controller created
+service/ingress-nginx-controller-admission created
+deployment.apps/ingress-nginx-controller created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+### verify it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy -n ingress-nginx
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+ingress-nginx-controller   1/1     1            1           45s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get svc  -n ingress-nginx
+NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             NodePort    10.106.211.147   <none>        80:32114/TCP,443:31929/TCP   53s
+ingress-nginx-controller-admission   ClusterIP   10.101.178.216   <none>        443/TCP                      53s
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+### Now creating External LB and forward traffice to 32114 for http & 31929 for https from LB to Nodes 
+
+### a view of k8s cluster with Ingress controller 
+
+<img src="vi.png">
+
+### lets deploy app with Ingress rule now 
+
+```
+[ashu@docker-host k8s-app-deploy]$ ls
+admin.yaml               ashunodeportlb.yaml  ashu-ui-npsvc.yaml  autopod.yaml  logs.txt          s1.yaml     tomcat.yaml
+appashu_deployment.yaml  ashupod1.yaml        autopod.json        hpa.yaml      mynslimitcg.yaml  task1.yaml  ui_deploy.yaml
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f ui_deploy.yaml 
+deployment.apps/ashu-mobi-ui created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           4s
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f  hpa.yaml 
+horizontalpodautoscaler.autoscaling/ashu-mobi-ui created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  hpa
+NAME           REFERENCE                 TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+ashu-mobi-ui   Deployment/ashu-mobi-ui   <unknown>/85%   3         20        0          4s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           29s
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+### creating clusterip type service 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   3/3     3            3           10m
+[ashu@docker-host k8s-app-deploy]$ kubectl  expose deployment ashu-mobi-ui --type ClusterIP --port 1234 --target-port 80 --name ashu-svc1 --dry-run=client -o yaml  >clusterip_svc.yaml 
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f clusterip_svc.yaml 
+service/ashu-svc1 created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get svc
+NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+ashu-svc1   ClusterIP   10.107.101.151   <none>        1234/TCP   5s
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+### Ingress rule 
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ashu-app-ingress-rule # name of rule
+  namespace: ashu-project # namespace info 
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx  # using which product you are creating ingress rule like istio , nginx etc 
+  rules:
+  - host: me.ashutoshh.in # DNS name of app which you have purchased 
+    http:
+      paths:
+      - path: / # home page of your app 
+        pathType: Prefix
+        backend:
+          service:
+            name: ashu-svc1 # name of service where ingress will forward traffic 
+            port:
+              number: 1234 # service port number 
+```
+
+### lets deploy it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f ingress-route-rule.yaml 
+ingress.networking.k8s.io/ashu-app-ingress-rule created
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  ingress 
+NAME                    CLASS   HOSTS             ADDRESS   PORTS   AGE
+ashu-app-ingress-rule   nginx   me.ashutoshh.in             80      5s
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+
 
 
