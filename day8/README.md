@@ -89,3 +89,25 @@ ff1154af28db: Mounted from dockerashu/ashu-ui
 67a4178b7d47: Mounted from dockerashu/ashu-ui 
 uiv1: digest: sha256:73ac06306b1e4a0b774e7dea8cb3d874c0278a87bb87a016117812e9e1f70244 size: 1779
 ```
+
+### Creating Deployment of above image 
+
+```
+ kubectl create deployment  ashu-mobi-ui  --image=docker.io/dockerashu/ashumobi:uiv1  --port  80 --dry-run=client -o yaml  >ui_deploy.yaml 
+```
+
+### deploy it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f ui_deploy.yaml 
+deployment.apps/ashu-mobi-ui created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deployment 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-mobi-ui   1/1     1            1           5s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  pods
+NAME                            READY   STATUS    RESTARTS   AGE
+ashu-mobi-ui-6c8874f549-bkvnk   1/1     Running   0          9s
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
+
