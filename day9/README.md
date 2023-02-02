@@ -155,6 +155,47 @@ ingress.networking.k8s.io "ashu-app-ingress-rule" deleted
 [ashu@docker-host ashu-apps]$ 
 ```
 
+### Introduction to ConfigMap & Secret 
+
+<img src="sec.png">
+
+### use configMap 
+
+### dockerfile 
+
+```
+FROM oraclelinux:8.4
+ENV code=blue
+RUN mkdir /test
+COPY hello.sh /test/
+WORKDIR /test
+RUN chmod +x hello.sh
+ENTRYPOINT ["./hello.sh"]
+```
+
+### hello.sh 
+
+```
+#!/bin/bash
+
+if [ "$code" == "blue"  ]
+then
+    while [ true ]
+    do  
+        echo "Hello i am code Blue !!!"
+        sleep 10 
+    done
+elif [ "$code" == "black"  ]
+then
+    while [ true ]
+    do
+        echo "Hello i am code black !!!"
+        sleep 10
+    done
+fi 
+```
+
+
 
 
 
