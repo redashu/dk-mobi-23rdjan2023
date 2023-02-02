@@ -275,6 +275,90 @@ Hello i am code black !!!
 [ashu@docker-host k8s-app-deploy]$
 ```
 
+### creating configMAP 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  configmap  ashu-env-cm  --from-literal  code=black --dry-run=client -o yaml 
+apiVersion: v1
+data:
+  code: black
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ashu-env-cm
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  configmap  ashu-env-cm  --from-literal  code=black --dry-run=client -o yaml  >mycm.yaml 
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f mycm.yaml 
+configmap/ashu-env-cm created
+[ashu@docker-host k8s-app-deploy]$ kubectl   get  configmap 
+NAME               DATA   AGE
+ashu-env-cm        1      8s
+kube-root-ca.crt   1      2d23h
+[ashu@docker-host k8s-app-deploy]$
+```
+
+### calling configmap in deployment file 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-test
+  name: ashu-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-test
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-test
+    spec:
+      containers:
+      - image: docker.io/dockerashu/testing:v1
+        name: testing
+        resources: {}
+        envFrom: # to call some resources 
+        - configMapRef:
+            name: ashu-env-cm
+status: {}
+
+
+```
+
+### lets deploy the deployment controller 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f  testcm.yaml 
+deployment.apps/ashu-test created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deployment 
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-test   1/1     1            1           6s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get po 
+NAME                         READY   STATUS    RESTARTS   AGE
+ashu-test-6dfbc9ff8c-5t6d8   1/1     Running   0          10s
+[ashu@docker-host k8s-app-deploy]$ kubectl get cm 
+NAME               DATA   AGE
+ashu-env-cm        1      7m49s
+kube-root-ca.crt   1      2d23h
+```
+
+### logs
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl logs ashu-test-6dfbc9ff8c-5t6d8 
+Hello i am code black !!!
+Hello i am code black !!!
+Hello i am code black !!!
+Hello i am code black !!!
+Hello i am code black !!
+```
+
+
 
 
 
