@@ -135,6 +135,26 @@ Pod Template:
     Environment:  <none>
 ```
 
+### lets clean all the resources in Namespace 
+
+```
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl delete all --all
+pod "ashu-mobi-ui-6c8874f549-2nc7x" deleted
+pod "ashu-mobi-ui-6c8874f549-m4xkg" deleted
+pod "ashu-mobi-ui-6c8874f549-rmqkj" deleted
+service "ashu-svc1" deleted
+deployment.apps "ashu-mobi-ui" deleted
+horizontalpodautoscaler.autoscaling "ashu-mobi-ui" deleted
+[ashu@docker-host ashu-apps]$ kubectl  get  ing
+NAME                    CLASS   HOSTS             ADDRESS         PORTS   AGE
+ashu-app-ingress-rule   nginx   me.ashutoshh.in   172.31.17.130   80      21h
+[ashu@docker-host ashu-apps]$ kubectl delete ing ashu-app-ingress-rule 
+ingress.networking.k8s.io "ashu-app-ingress-rule" deleted
+[ashu@docker-host ashu-apps]$ 
+```
+
 
 
 
