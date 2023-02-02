@@ -195,6 +195,24 @@ then
 fi 
 ```
 
+### deploy test image 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl create deployment ashu-test --image=docker.io/dockerashu/testing:v1 --dry-run=client -o yaml >testcm.yaml 
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f testcm.yaml 
+deployment.apps/ashu-test created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-test   0/1     1            0           3s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  po
+NAME                         READY   STATUS    RESTARTS   AGE
+ashu-test-8689b84f64-8rhcc   1/1     Running   0          6s
+[ashu@docker-host k8s-app-deploy]$ 
+
+```
+
+
+
 
 
 
