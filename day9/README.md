@@ -457,6 +457,49 @@ kubectl create ns ashuk8s1 --dry-run=client -o yaml
  kubectl  create  service nodeport ashusvc1 --tcp 1234:80 --dry-run=client -o yaml 
 ```
 
+## Creating database using deployment -- no storage 
+
+### creating configMAP 
+
+```
+ashu@docker-host k8s-app-deploy]$ kubectl create  configmap ashu-db-details --from-literal MYSQL_DATABASE="MobiEmp" --dry-run=client  -o yaml 
+apiVersion: v1
+data:
+  MYSQL_DATABASE: MobiEmp
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ashu-db-details
+```
+
+### adding more variable 
+
+```
+apiVersion: v1
+data:
+  MYSQL_DATABASE: MobiEmp
+  MYSQL_USER: ashu 
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ashu-db-details
+```
+
+===
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f mysql_deployment.yaml 
+configmap/ashu-db-details created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  cm 
+NAME               DATA   AGE
+ashu-db-details    2      5s
+ashu-env-cm        2      68m
+kube-root-ca.crt   1      3d
+```
+
+### 
+
+
 
 
 
