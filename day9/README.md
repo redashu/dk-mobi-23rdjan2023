@@ -358,6 +358,97 @@ Hello i am code black !!!
 Hello i am code black !!
 ```
 
+### task solution 
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashuk8s1
+spec: {}
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod1
+  name: ashupod1
+  namespace: ashuk8s1 # adding namespace info 
+spec:
+  containers:
+  - image: ubuntu
+    name: ashupod1
+    command: ["sleep","10000"] # to give parent process to pod container 
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+  namespace: ashuk8s1 # namespace info 
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31009 # we can choose port number statically 
+  selector:
+    app: ashusvc1
+  type: NodePort
+status:
+  loadBalancer: {}
+```
+
+### 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f mytask.yaml 
+namespace/ashuk8s1 configured
+pod/ashupod1 configured
+service/ashusvc1 created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get po,svc -n ashuk8s1 
+NAME           READY   STATUS    RESTARTS   AGE
+pod/ashupod1   1/1     Running   0          2m36s
+
+NAME               TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/ashusvc1   NodePort   10.110.9.249   <none>        1234:31009/TCP   12s
+[ashu@docker-host k8s-app-deploy]$ ls
+admin.yaml               ashupod1.yaml       autopod.yaml        ingress-route-rule.yaml  mynslimitcg.yaml  task1.yaml   ui_deploy.yaml
+appashu_deployment.yaml  ashu-ui-npsvc.yaml  clusterip_svc.yaml  logs.txt                 mytask.yaml       testcm.yaml
+ashunodeportlb.yaml      autopod.json        hpa.yaml            mycm.yaml                s1.yaml           tomcat.yaml
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  get po  -n ashuk8s1 
+NAME       READY   STATUS    RESTARTS   AGE
+ashupod1   1/1     Running   0          3m22s
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl -n ashuk8s1   cp  autopod.json  ashupod1:/tmp/
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  -n ashuk8s1  exec ashupod1 -- bash 
+[ashu@docker-host k8s-app-deploy]$ 
+[ashu@docker-host k8s-app-deploy]$ kubectl  -n ashuk8s1  exec -it ashupod1 -- bash 
+root@ashupod1:/# 
+root@ashupod1:/# 
+root@ashupod1:/# cd /tmp/
+root@ashupod1:/tmp# ls
+autopod.json
+root@ashupod1:/tmp# exit
+exit
+```
+
 
 
 
