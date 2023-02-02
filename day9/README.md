@@ -615,6 +615,28 @@ status: {}
 ```
 
 
+### final Deployment 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f mysql_deployment.yaml 
+configmap/ashu-db-details configured
+secret/ashu-db-cred configured
+deployment.apps/ashu-db-server created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  deploy 
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-db-server   1/1     1            1           12s
+[ashu@docker-host k8s-app-deploy]$ kubectl  get cm,secret 
+NAME                         DATA   AGE
+configmap/ashu-db-details    2      18m
+configmap/ashu-env-cm        2      86m
+configmap/kube-root-ca.crt   1      3d
+
+NAME                         TYPE                                  DATA   AGE
+secret/ashu-db-cred          Opaque                                1      9m50s
+secret/default-token-s2d7c   kubernetes.io/service-account-token   3      3d
+[ashu@docker-host k8s-app-deploy]$ 
+```
+
 
 
 
