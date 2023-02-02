@@ -211,6 +211,71 @@ ashu-test-8689b84f64-8rhcc   1/1     Running   0          6s
 
 ```
 
+### checking output 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  po
+NAME                         READY   STATUS    RESTARTS   AGE
+ashu-test-8689b84f64-8rhcc   1/1     Running   0          61s
+[ashu@docker-host k8s-app-deploy]$ kubectl logs  ashu-test-8689b84f64-8rhcc 
+Hello i am code Blue !!!
+Hello i am code Blue !!!
+Hello i am code Blue !!!
+Hello i am code Blue !!!
+Hello i am code Blue !!!
+Hello i am code Blue !!!
+Hello i am code Blue !!!
+```
+
+### lets add ENV section in Deployment file 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-test
+  name: ashu-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-test
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-test
+    spec:
+      containers:
+      - image: docker.io/dockerashu/testing:v1
+        name: testing
+        resources: {}
+        env: # to create / use ENV variable of docker images 
+        - name: code # name of ENV 
+          value: black # value of ENV 
+status: {}
+
+```
+
+### deploy again 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f testcm.yaml 
+deployment.apps/ashu-test configured
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  po 
+NAME                         READY   STATUS        RESTARTS   AGE
+ashu-test-7b76fbfbf4-jkjcd   1/1     Running       0          4s
+ashu-test-8689b84f64-8rhcc   1/1     Terminating   0          5m32s
+[ashu@docker-host k8s-app-deploy]$ kubectl  logs ashu-test-7b76fbfbf4-jkjcd
+Hello i am code black !!!
+Hello i am code black !!!
+[ashu@docker-host k8s-app-deploy]$
+```
+
+
 
 
 
