@@ -449,6 +449,13 @@ root@ashupod1:/tmp# exit
 exit
 ```
 
+### commands to generate YAML of tasks 
+
+```
+kubectl create ns ashuk8s1 --dry-run=client -o yaml
+ kubectl  run ashupod1  --image=ubuntu --dry-run=client -o yaml
+ kubectl  create  service nodeport ashusvc1 --tcp 1234:80 --dry-run=client -o yaml 
+```
 
 
 
