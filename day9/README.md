@@ -107,6 +107,35 @@ Pod Template:
     Host Port:    0/TCP
 ```
 
+### rollout to rollback app 
+
+```
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl rollout undo deployment ashu-mobi-ui 
+deployment.apps/ashu-mobi-ui rolled back
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  describe deploy ashu-mobi-ui 
+Name:                   ashu-mobi-ui
+Namespace:              ashu-project
+CreationTimestamp:      Wed, 01 Feb 2023 12:15:57 +0000
+Labels:                 app=ashu-mobi-ui
+Annotations:            deployment.kubernetes.io/revision: 3
+Selector:               app=ashu-mobi-ui
+Replicas:               3 desired | 3 updated | 4 total | 3 available | 1 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=ashu-mobi-ui
+  Containers:
+   ashumobi:
+    Image:        docker.io/dockerashu/ashumobi:uiv1
+    Port:         80/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+```
+
+
 
 
 
