@@ -497,7 +497,124 @@ ashu-env-cm        2      68m
 kube-root-ca.crt   1      3d
 ```
 
-### 
+### understanding and creating secret in k8s 
+
+<img src="secret.png">
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  secret
+Create a secret using specified subcommand.
+
+Available Commands:
+  docker-registry Create a secret for use with a Docker registry
+  generic         Create a secret from a local file, directory, or literal value
+  tls             Create a TLS secret
+
+Usage:
+  kubectl create secret [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  secret  generic ashu-db-cred  --from-literal rootpass=
+secret/ashu-db-cred created
+[ashu@docker-host k8s-app-deploy]$ kubectl  create  secret  generic ashu-db-cred  --from-literal rootpass="MobiPass@09" --dry-run=client -o yaml 
+apiVersion: v1
+data:
+  rootpass: TW9iaVBhc3NAMDk=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: ashu-db-cred
+```
+
+### lets deploy it 
+
+```
+[ashu@docker-host k8s-app-deploy]$ kubectl apply -f mysql_deployment.yaml 
+configmap/ashu-db-details configured
+secret/ashu-db-cred created
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  cm 
+NAME               DATA   AGE
+ashu-db-details    2      8m16s
+ashu-env-cm        2      76m
+kube-root-ca.crt   1      3d
+[ashu@docker-host k8s-app-deploy]$ kubectl  get  secret
+NAME                  TYPE                                  DATA   AGE
+ashu-db-cred          Opaque                                1      7s
+default-token-s2d7c   kubernetes.io/service-account-token   3      3d
+[ashu@docker-host k8s-app-deploy]$ 
+
+
+```
+
+### Deployment YAML and calling configmap and secret 
+
+```
+ashu@docker-host k8s-app-deploy]$ kubectl  create deployment  ashu-db-server  --image=mysql:5.6  --port 3306 --dry-run=client -o yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+```
+### final YAML of mysql Deployment with configmap & secret 
+
+```
+apiVersion: v1
+data:
+  MYSQL_DATABASE: MobiEmp
+  MYSQL_USER: ashu 
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ashu-db-details
+---
+apiVersion: v1
+data:
+  rootpass: TW9iaVBhc3NAMDk=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: ashu-db-cred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-db-server
+  name: ashu-db-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-db-server
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-db-server
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        ports:
+        - containerPort: 3306
+        resources: {}
+        envFrom:
+        - configMapRef: # keyword to call CM 
+            name: ashu-db-details # name of configmap 
+        env: # calling values 
+        - name: MYSQL_ROOT_PASSWORD # this variable want a value 
+          valueFrom: 
+            secretKeyRef: # keyword to call secret 
+              name: ashu-db-cred # name of secret 
+              key: rootpass  # key of secret 
+status: {}
+```
+
+
 
 
 
