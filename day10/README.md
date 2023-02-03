@@ -476,5 +476,23 @@ rules:
  1016  kubectl create role pod-access1  --verb=get --verb=list --verb=watch --resource=pods -n ashu-developer   --dry-run=client -o yaml 
 ```
 
+### testing 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl get deploy  --kubeconfig custom-kubeconfig.yaml 
+Error from server (Forbidden): deployments.apps is forbidden: User "system:serviceaccount:ashu-developer:default" cannot list resource "deployments" in API group "apps" in the namespace "ashu-developer"
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl get pods  --kubeconfig custom-kubeconfig.yaml 
+No resources found in ashu-developer namespace.
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl apply -f k8s-app-deploy/ashupod1.yaml  --kubeconfig custom-kubeconfig.yaml 
+Error from server (Forbidden): error when creating "k8s-app-deploy/ashupod1.yaml": pods is forbidden: User "system:serviceaccount:ashu-developer:default" cannot create resource "pods" in API group "" in the namespace "ashu-developer"
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+
+
 
 
