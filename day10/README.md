@@ -181,5 +181,42 @@ NAME                            READY   STATUS    RESTARTS   AGE
 ashu-post-db-794dd57599-kg2f8   1/1     Running   0          81s
 [ashu@docker-host post-gre-deploy]
 ```
+### creating service for db 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  get deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-post-db   1/1     1            1           14m
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  expose  deployment  ashu-post-db  --type ClusterIP --port 5432 --name ashu-svc1 --dry-run=client -o yaml >svc.yaml 
+[ashu@docker-host ashu-apps]$ kubectl  apply -f svc.yaml 
+service/ashu-svc1 created
+[ashu@docker-host ashu-apps]$ kubectl  get  svc
+NAME        TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+ashu-svc1   ClusterIP   10.97.28.6   <none>        5432/TCP   4s
+[ashu@docker-host ashu-apps]$ 
+
+
+
+```
+
+
+### lets clean up 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl delete all,cm,secret  --all 
+pod "ashu-post-db-7d65467b9f-rv4l2" deleted
+service "ashu-svc1" deleted
+deployment.apps "ashu-post-db" deleted
+replicaset.apps "ashu-post-db-7d65467b9f" deleted
+configmap "ashu-db-details" deleted
+configmap "ashu-env-cm" deleted
+configmap "ashu-postgre-cm" deleted
+configmap "kube-root-ca.crt" deleted
+secret "ashu-db-cred" deleted
+secret "ashu-postgre-secret" deleted
+secret "default-token-s2d7c" deleted
+[ashu@docker-host ashu-apps]$ 
+```
 
 
