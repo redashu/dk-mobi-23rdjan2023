@@ -338,5 +338,143 @@ status:
 
 ```
 
+## Best practise to share k8s cluster cred with someone 
+
+<img src="reshare.png">
+
+### users in k8s 
+
+<img src="users.png">
+
+### creating new NS 
+
+```
+[ashu@docker-host post-gre-deploy]$ kubectl  create  ns  ashu-developer 
+namespace/ashu-developer created
+[ashu@docker-host post-gre-deploy]$ 
+[ashu@docker-host post-gre-deploy]$ kubectl   get  serviceaccount  -n ashu-developer 
+NAME      SECRETS   AGE
+default   1         12s
+[ashu@docker-host post-gre-deploy]$ 
+[ashu@docker-host post-gre-deploy]$ kubectl   get  secret  -n ashu-developer 
+NAME                  TYPE                                  DATA   AGE
+default-token-kcg5f   kubernetes.io/service-account-token   3      63s
+[ashu@docker-host post-gre-deploy]$ 
+
+
+```
+
+### describe secret 
+
+```
+ashu@docker-host post-gre-deploy]$ kubectl   get  secret  -n ashu-developer 
+NAME                  TYPE                                  DATA   AGE
+default-token-kcg5f   kubernetes.io/service-account-token   3      63s
+[ashu@docker-host post-gre-deploy]$ 
+[ashu@docker-host post-gre-deploy]$ kubectl describe  secret default-token-kcg5f  -n ashu-developer 
+Name:         default-token-kcg5f
+Namespace:    ashu-developer
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: default
+              kubernetes.io/service-account.uid: 8fec2c6e-1641-4975-8487-eeb3e80a2782
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1099 bytes
+namespace:  14 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6ImJGNEpKeG5pZEdGU2NYa0pKSDZyNjd3aVRXN25lVGdsLThCRjg1U1otNkEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJhc2h1LWRldmVsb3BlciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkZWZhdWx0LXRva2VuLWtjZzVmIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImRlZmF1bHQiLCJrdWJlcm5ldGVz
+```
+
+### understanding kube-config for authentication purpose 
+
+<img src="auth.png">
+
+### lets check and verify 
+
+```
+ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl   get  nodes  --kubeconfig  custom-kubeconfig.yaml  
+Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:ashu-developer:default" cannot list resource "nodes" in API group "" at the cluster scope
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  cluster-info --kubeconfig  custom-kubeconfig.yaml 
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+Error from server (Forbidden): services is forbidden: User "system:serviceaccount:ashu-developer:default" cannot list resource "services" in API group "" in the namespace "kube-system"
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  version --kubeconfig  custom-kubeconfig.yaml 
+Client Version: version.Info{Major:"1", Minor:"23", GitVersion:"v1.23.16", GitCommit:"60e5135f758b6e43d0523b3277e8d34b4ab3801f", GitTreeState:"clean", BuildDate:"2023-01-18T16:01:10Z", GoVersion:"go1.19.5", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"23", GitVersion:"v1.23.16", GitCommit:"60e5135f758b6e43d0523b3277e8d34b4ab3801f", GitTreeState:"clean", BuildDate:"2023-01-18T15:54:23Z", GoVersion:"go1.19.5", Compiler:"gc", Platform:"linux/amd64"}
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl get pods  --kubeconfig  custom-kubeconfig.yaml 
+Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:ashu-developer:default" cannot list resource "pods" in API group "" in the namespace "ashu-developer"
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+## Introduction RBAC 
+
+<img src="rbac.png">
+
+### Being admin i am creating role for ashu-developer namespace 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  get  roles -n ashu-developer 
+No resources found in ashu-developer namespace.
+[ashu@docker-host ashu-apps]$ kubectl create role pod-access  --verb=get --verb=list --verb=watch --resource=pods -n ashu-developer 
+role.rbac.authorization.k8s.io/pod-access created
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  get  roles -n ashu-developer 
+NAME         CREATED AT
+pod-access   2023-02-03T12:26:30Z
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### bindding role --service account 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl  create  rolebinding  bind1  --role pod-access  --serviceaccount=ashu-developer:default -n ashu-developer 
+rolebinding.rbac.authorization.k8s.io/bind1 created
+[ashu@docker-host ashu-apps]$ 
+[ashu@docker-host ashu-apps]$ kubectl  get  rolebindings -n ashu-developer 
+NAME    ROLE              AGE
+bind1   Role/pod-access   24s
+[ashu@docker-host ashu-apps]$ 
+
+```
+
+### commands for RBAC 
+
+```
+[ashu@docker-host ashu-apps]$ kubectl create role pod-access1  --verb=get --verb=list --verb=watch --resource=pods -n ashu-developer   --dry-run=client -o yaml 
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: pod-access1
+  namespace: ashu-developer
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+```
+
+### more commands 
+
+```
+1012  kubectl create role pod-access  --verb=get --verb=list --verb=watch --resource=pods -n ashu-developer 
+ 1013  kubectl  get  roles -n ashu-developer 
+ 1014  kubectl  create  rolebinding  bind1  --role pod-access  --serviceaccount=ashu-developer:default -n ashu-developer 
+ 1015  kubectl  get  rolebindings -n ashu-developer 
+ 1016  kubectl create role pod-access1  --verb=get --verb=list --verb=watch --resource=pods -n ashu-developer   --dry-run=client -o yaml 
+```
+
 
 
