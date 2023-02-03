@@ -492,6 +492,27 @@ Error from server (Forbidden): error when creating "k8s-app-deploy/ashupod1.yaml
 
 ```
 
+## Helm DEMo
+
+```
+1018  helm version 
+ 1019  chmod  400 /home/ashu/.kube/config
+ 1020  helm version 
+ 1021  kubectl  get  all
+ 1022  helm repo add ashu-repo https://charts.bitnami.com/bitnami
+ 1023  helm repo ls
+ 1024  helm install ashu-software  ashu-repo/nginx 
+ 1025  kubectl config get-contexts 
+ 1026  kubectl config set-context --current --namespace default 
+ 1027  chmod 644 ~/.kube/config 
+ 1028  kubectl config set-context --current --namespace default 
+ 1029  helm install ashu-software  ashu-repo/nginx 
+ 1030  history 
+ 1031  kubectl  get deployment 
+ 1032  kubectl  get  svc
+ 1033  helm ls
+ 1034  helm uninstall ashu-software
+```
 
 
 
