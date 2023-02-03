@@ -49,3 +49,137 @@ kube-root-ca.crt   1      3d21h
 ```
 [ashu@docker-host post-gre-deploy]$ kubectl  create secret  generic ashu-postgre-secret  --from-literal  mypass="MobiAshu@098#" --dry-run=client -o yaml >secret.yaml 
 ```
+
+### secret creation 
+
+```
+[ashu@docker-host post-gre-deploy]$ kubectl apply -f secret.yaml 
+secret/ashu-postgre-secret created
+[ashu@docker-host post-gre-deploy]$ kubectl  get  secret 
+NAME                  TYPE                                  DATA   AGE
+ashu-db-cred          Opaque                                1      41m
+ashu-postgre-secret   Opaque                                1      6s
+default-token-s2d7c   kubernetes.io/service-account-token   3      3d21h
+[ashu@docker-host post-gre-deploy]$ 
+
+```
+
+### volume info in k8s 
+
+<img src="vol.png">
+
+### Deployment creation 
+
+```
+[ashu@docker-host post-gre-deploy]$ kubectl  create  deployment  ashu-post-db --image=postgres  --port 5432 --dry-run=client  -o yaml >deployment.yaml 
+[ashu@docker-host post-gre-deploy]$ ls
+configmap.yaml  deployment.yaml  secret.yaml
+[ashu@docker-host post-gre-deploy]$ 
+
+```
+
+### updataing deployment file for volume related data 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-post-db
+  name: ashu-post-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-post-db
+  strategy: {}
+  template: # template section 
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-post-db
+    spec:
+      volumes: # for creating volume 
+      - name: ashu-vol123 # name of volume 
+        hostPath: # type of volume -- hostpath means local node storage 
+          path: /mnt/ashudb-space  # this directory will be created automatically 
+          type: Directory 
+      containers: # for creating container 
+      - image: postgres
+        name: postgres
+        ports:
+        - containerPort: 5432
+        volumeMounts: # attaching / mounting volume we created above 
+        - name: ashu-vol123 
+          mountPath: /var/lib/postgresql/data/ 
+        resources: {}
+status: {}
+
+```
+
+### updating configMap & Secret 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-post-db
+  name: ashu-post-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-post-db
+  strategy: {}
+  template: # template section 
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-post-db
+    spec:
+      volumes: # for creating volume 
+      - name: ashu-vol123 # name of volume 
+        hostPath: # type of volume -- hostpath means local node storage 
+          path: /mnt/ashudb-space  # this directory will be created automatically 
+          type: DirectoryOrCreate
+      containers: # for creating container 
+      - image: postgres
+        name: postgres
+        ports:
+        - containerPort: 5432
+        volumeMounts: # attaching / mounting volume we created above 
+        - name: ashu-vol123 
+          mountPath: /var/lib/postgresql/data/ 
+        envFrom: # to calling configmap / secret directly 
+        - configMapRef:
+            name: ashu-postgre-cm
+        env: # to use / create ENV in pod container 
+        - name: POSTGRES_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: ashu-postgre-secret
+              key: mypass
+        resources: {}
+status: {}
+
+```
+
+### deploy it 
+
+```
+[ashu@docker-host post-gre-deploy]$ kubectl apply -f deployment.yaml 
+Warning: resource deployments/ashu-post-db is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+deployment.apps/ashu-post-db configured
+[ashu@docker-host post-gre-deploy]$ kubectl  get  deploy 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-post-db   1/1     1            1           78s
+[ashu@docker-host post-gre-deploy]$ kubectl  get  po
+NAME                            READY   STATUS    RESTARTS   AGE
+ashu-post-db-794dd57599-kg2f8   1/1     Running   0          81s
+[ashu@docker-host post-gre-deploy]
+```
+
+
