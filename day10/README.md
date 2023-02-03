@@ -219,4 +219,124 @@ secret "default-token-s2d7c" deleted
 [ashu@docker-host ashu-apps]$ 
 ```
 
+### Splunk deployment in k8s 
+
+```
+1023  kubectl  create ns  ashusplunkns --dry-run=client -o yaml >ashusplunk.yaml
+ 1024  kubectl create configmap  ashu-sp --from-literal  lic="--accept-license"  --dry-run=client  -o yaml >>ashusplunk.yaml 
+ 1025  kubectl  create  secret  generic  ashu-sec --from-literal sp_pass="SpMobi@098#" --namespace  ashusplunkns  --dry-run=client -o yaml  >>ashusplunk.yaml 
+ 1026  history 
+ 1027  kubectl create deployment ashu-sp-dep --image=splunk/splunk:latest  --port 8000  --namespace  ashusplunkns  --dry-run=client -o yaml >>ashusplunk.yaml 
+ 1028  history 
+ 1029  kubectl apply -f ashusplunk.yaml 
+ 1030  kubectl   get  cm -n ashusplunkns 
+ 1031  kubectl   get  secre -n ashusplunkns 
+ 1032  history 
+ 1033  kubectl get  secret -n ashusplunkns 
+ 1034  kubectl  get  deploy -n ashusplunkns 
+ 1035  kubectl  get  po -n ashusplunkns 
+ 1036  kubectl expose  deployment  ashu-sp-dep  --type NodePort --port 8000 --name ssv1 --dry-run=client -o yaml  >>ashusplunk.yaml 
+ 1037  kubectl expose  deployment  ashu-sp-dep  --type NodePort --port 8000 --name ssv1 -n ashusplunk.yaml --dry-run=client -o yaml  >>ashusplunk.yaml 
+ 1038  history 
+ 1039  kubectl -n ashusplunkns expose deploy ashu-sp-dep --type NodePort --port 8000 --name ss11 --dry-run=client -o yaml >>ashusplunk.yaml 
+ 1040  kubectl apply -f ashusplunk.yaml 
+ 1041  history 
+[ashu@docker-host post-gre-deploy]$ kubectl  get  svc -n ashusplunkns 
+NAME   TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+ss11   NodePort   10.111.142.121   <none>        8000:30101/TCP   15s
+```
+
+### YAML file 
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashusplunkns
+spec: {}
+status: {}
+---
+apiVersion: v1
+data:
+  lic: --accept-license
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ashu-sp
+  namespace: ashusplunkns
+
+---
+
+apiVersion: v1
+data:
+  sp_pass: U3BNb2JpQDA5OCM=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: ashu-sec
+  namespace: ashusplunkns
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-sp-dep
+  name: ashu-sp-dep
+  namespace: ashusplunkns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-sp-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-sp-dep
+    spec:
+      containers:
+      - image: splunk/splunk:latest
+        name: splunk
+        ports:
+        - containerPort: 8000
+        resources: {}
+        env:
+        - name: SPLUNK_START_ARGS
+          valueFrom:
+            configMapKeyRef:
+              name: ashu-sp
+              key: lic
+        - name: SPLUNK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ashu-sec
+              key: sp_pass
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-sp-dep
+  name: ss11
+  namespace: ashusplunkns
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: ashu-sp-dep
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+
 
